@@ -1,0 +1,223 @@
+================================================================================
+SUPPORTED OBJECT TYPES - Quick Reference
+================================================================================
+
+The Disposable UI Agent now supports 7+ object types with realistic mock data.
+All patterns work across all object types automatically!
+
+================================================================================
+1. LEAD
+================================================================================
+Fields:
+  - id (number)
+  - name (string) - Company name
+  - revenue (currency)
+  - status (enum) - qualified, negotiation, won
+  - contact (string) - Contact person
+  - created (date)
+
+Example Query:
+  "show me all leads"
+  "display top 5 leads by revenue"
+  "show qualified leads"
+
+Best Patterns:
+  - user_avatar_list (if has contact photos)
+  - data_table_pattern (for comparison)
+  - metric_dashboard (for KPIs)
+
+================================================================================
+2. CONTACT / USER
+================================================================================
+Fields:
+  - id (number)
+  - name (string)
+  - email (email)
+  - role (string)
+  - company (string)
+  - phone (phone)
+
+Example Query:
+  "show all contacts"
+  "display contact list"
+  "view team members"
+
+Best Patterns:
+  - user_avatar_list (perfect for contacts!)
+  - detail_view_card (for single contact)
+  - data_table_pattern (for comparison)
+
+================================================================================
+3. DEAL / OPPORTUNITY
+================================================================================
+Fields:
+  - id (number)
+  - title (string)
+  - value (currency)
+  - stage (enum) - proposal, negotiation, closed_won
+  - probability (percentage)
+  - close_date (date)
+
+Example Query:
+  "show my deals"
+  "display opportunities"
+  "sales pipeline view"
+
+Best Patterns:
+  - data_table_pattern (for pipeline)
+  - metric_dashboard (for sales metrics)
+  - status_list_compact (for quick view)
+
+================================================================================
+4. CASE / TICKET
+================================================================================
+Fields:
+  - id (number)
+  - case_number (string)
+  - subject (string)
+  - priority (enum) - low, medium, high, critical
+  - status (enum) - open, in_progress, resolved
+  - assigned_to (string)
+  - created_date (date)
+  - customer (string)
+
+Example Query:
+  "show all open cases"
+  "display high priority tickets"
+  "list my cases"
+
+Best Patterns:
+  - status_list_compact (perfect for cases!)
+  - data_table_pattern (for case management)
+  - detail_view_card (for case details)
+
+================================================================================
+5. ACCOUNT / COMPANY / ORGANIZATION
+================================================================================
+Fields:
+  - id (number)
+  - account_name (string)
+  - industry (string)
+  - revenue (currency)
+  - employees (number)
+  - status (enum) - active, prospect
+  - owner (string)
+  - location (string)
+  - tier (enum) - small, mid-market, enterprise
+
+Example Query:
+  "show all accounts"
+  "display enterprise accounts"
+  "account performance dashboard"
+
+Best Patterns:
+  - data_table_pattern (for account list)
+  - card_grid_pattern (for account cards)
+  - metric_dashboard (for account metrics)
+
+================================================================================
+6. BRANCH / OFFICE / LOCATION
+================================================================================
+Fields:
+  - id (number)
+  - branch_name (string)
+  - location (string) - Full address
+  - manager (string)
+  - employees (number)
+  - revenue (currency)
+  - region (string) - West, East, South, Central
+  - status (enum) - active, inactive
+  - opened_date (date)
+
+Example Query:
+  "show all branches"
+  "display branch performance"
+  "branch comparison by region"
+
+Best Patterns:
+  - data_table_pattern (for comparison)
+  - metric_dashboard (for performance)
+  - card_grid_pattern (for branch cards)
+
+================================================================================
+7. PRODUCT / ITEM / INVENTORY
+================================================================================
+Fields:
+  - id (number)
+  - product_name (string)
+  - category (string)
+  - price (currency)
+  - stock (number)
+  - rating (number) - 0-5 stars
+  - status (enum) - available, low_stock, out_of_stock
+  - image_url (url)
+  - sku (string)
+
+Example Query:
+  "show product catalog"
+  "display all products"
+  "show low stock items"
+
+Best Patterns:
+  - card_grid_pattern (perfect for products!)
+  - data_table_pattern (for inventory)
+  - status_list_compact (for stock status)
+
+================================================================================
+8. GENERIC (Fallback for any other object)
+================================================================================
+Fields:
+  - id (number)
+  - name (string)
+  - value (number)
+  - status (enum)
+  - category (string)
+  - created_date (date)
+
+Example Query:
+  "show all [anything]"
+
+Best Patterns:
+  - Automatically selects based on query intent and data shape
+
+================================================================================
+PATTERN SELECTION LOGIC
+================================================================================
+
+The agent automatically selects the best pattern based on:
+
+1. Query Intent:
+   - "list", "show all" → List patterns
+   - "details", "view" → Detail patterns
+   - "dashboard", "metrics" → Dashboard patterns
+
+2. Data Characteristics:
+   - Has images/photos → user_avatar_list, card_grid_pattern
+   - Has status field → status_list_compact
+   - Many numeric fields → data_table_pattern, metric_dashboard
+   - Single record → detail_view_card
+
+3. Object Type Hints:
+   - Contact/User → user_avatar_list
+   - Product → card_grid_pattern
+   - Case/Ticket → status_list_compact
+   - Account/Branch → data_table_pattern
+
+================================================================================
+ADDING NEW OBJECT TYPES
+================================================================================
+
+To add a new object type:
+
+1. Add mock data in: agent/data_fetcher.py
+2. Follow the pattern:
+   elif "your_object" in object_type:
+       return [
+           {"id": 1, "field1": "value1", ...},
+           ...
+       ]
+
+3. No need to modify patterns - they work automatically!
+
+================================================================================
+

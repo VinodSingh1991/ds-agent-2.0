@@ -1,0 +1,650 @@
+[
+  {
+    "mapping_id": "qm_001",
+    "timestamp": "2026-02-09T10:00:00Z",
+    "original_query": "show me top performing leads",
+    "normalized_query": "display high_performance lead list sorted",
+    "query_variants": [
+      "show top leads",
+      "display best performing leads",
+      "view high performance leads",
+      "get top leads by performance",
+      "show leads ranked by performance",
+      "best leads list"
+    ],
+    "query_intent": "view_list_filtered_sorted",
+    "query_complexity": 0.6,
+    "decomposition": {
+      "intent": "view_list",
+      "primary_object": "lead",
+      "related_objects": [],
+      "filters": [
+        {
+          "field": "performance",
+          "operator": ">",
+          "value": "average",
+          "implicit": true
+        }
+      ],
+      "sorting": {
+        "field": "performance",
+        "order": "desc"
+      },
+      "limit": 10,
+      "aggregations": [],
+      "visualization_hint": "table"
+    },
+    "data_context": {
+      "record_count": 10,
+      "fields_available": ["name", "company", "revenue", "score", "status"],
+      "data_types": {
+        "revenue": "currency",
+        "score": "percentage"
+      },
+      "has_missing_values": false,
+      "data_distribution": "normal"
+    },
+    "selected_layout": {
+      "layout_id": "layout_table_sorted_001",
+      "layout_type": "sorted_list_with_metrics",
+      "pattern_used": "data_table_pattern",
+      "components_used": ["Table", "Badge", "Metric", "Heading"],
+      "adaptations_made": [
+        "Added sort indicator on performance column",
+        "Highlighted top 3 rows with success badge",
+        "Added performance metric visualization"
+      ]
+    },
+    "success_metrics": {
+      "satisfaction_score": 0.95,
+      "iterations_needed": 1,
+      "user_feedback": "positive",
+      "reuse_count": 12,
+      "last_used": "2026-02-09",
+      "avg_response_time_ms": 450
+    },
+    "insights": {
+      "key_factors": [
+        "Table format allows easy comparison across leads",
+        "Sort indicator makes ranking clear",
+        "Metric component effectively visualizes performance scores"
+      ],
+      "avoid_patterns": [
+        "Card layout - takes too much vertical space",
+        "ListCard - harder to compare metrics side-by-side"
+      ],
+      "learned_optimizations": [
+        "Always show sort indicator when 'top' or 'best' in query",
+        "Use highlighting for top N items in ranked lists",
+        "Performance/score fields work best as Metric components"
+      ]
+    },
+    "tags": ["sorting", "filtering", "metrics", "comparison", "top_n"]
+  },
+  {
+    "mapping_id": "qm_002",
+    "timestamp": "2026-02-08T14:30:00Z",
+    "original_query": "show my lead details",
+    "normalized_query": "display single lead detail_view",
+    "query_variants": [
+      "view my lead",
+      "show lead information",
+      "display lead details",
+      "get lead info",
+      "view lead profile",
+      "lead details page"
+    ],
+    "query_intent": "view_detail_single",
+    "query_complexity": 0.3,
+    "decomposition": {
+      "intent": "view_detail",
+      "primary_object": "lead",
+      "related_objects": ["owner", "account"],
+      "filters": [
+        {
+          "field": "owner",
+          "operator": "=",
+          "value": "current_user",
+          "implicit": true
+        }
+      ],
+      "sorting": null,
+      "limit": 1,
+      "aggregations": [],
+      "visualization_hint": "detail_card"
+    },
+    "data_context": {
+      "record_count": 1,
+      "fields_available": ["name", "company", "email", "phone", "status", "revenue", "owner", "created_date", "description"],
+      "data_types": {
+        "revenue": "currency",
+        "created_date": "date",
+        "description": "text"
+      },
+      "has_missing_values": true,
+      "data_distribution": "single_record"
+    },
+    "selected_layout": {
+      "layout_id": "layout_detail_card_001",
+      "layout_type": "detail_view",
+      "pattern_used": "detail_view_card",
+      "components_used": ["Card", "Heading", "Text", "Label", "Badge", "Divider", "Button"],
+      "adaptations_made": [
+        "Organized fields into logical sections",
+        "Added null-safe rendering for optional fields",
+        "Included quick action buttons at top"
+      ]
+    },
+    "success_metrics": {
+      "satisfaction_score": 0.98,
+      "iterations_needed": 1,
+      "user_feedback": "positive",
+      "reuse_count": 45,
+      "last_used": "2026-02-09",
+      "avg_response_time_ms": 320
+    },
+    "insights": {
+      "key_factors": [
+        "Detail card pattern perfect for single record views",
+        "Logical grouping improves scannability",
+        "Action buttons at top provide quick access"
+      ],
+      "avoid_patterns": [
+        "Table - overkill for single record",
+        "List - implies multiple items"
+      ],
+      "learned_optimizations": [
+        "Group related fields with Divider for better organization",
+        "Always handle nullable fields gracefully",
+        "Place primary actions at top, secondary at bottom"
+      ]
+    },
+    "tags": ["single_record", "detail_view", "profile", "comprehensive"]
+  },
+  {
+    "mapping_id": "qm_003",
+    "timestamp": "2026-02-07T09:15:00Z",
+    "original_query": "sales dashboard for this month",
+    "normalized_query": "dashboard sales_metrics current_month aggregated",
+    "query_variants": [
+      "show sales dashboard",
+      "monthly sales overview",
+      "sales metrics dashboard",
+      "show sales KPIs",
+      "sales performance dashboard",
+      "monthly sales summary"
+    ],
+    "query_intent": "view_dashboard_aggregated",
+    "query_complexity": 0.7,
+    "decomposition": {
+      "intent": "view_dashboard",
+      "primary_object": "opportunity",
+      "related_objects": ["account", "user"],
+      "filters": [
+        {
+          "field": "close_date",
+          "operator": "between",
+          "value": "current_month",
+          "implicit": true
+        }
+      ],
+      "sorting": null,
+      "limit": null,
+      "aggregations": [
+        {"function": "sum", "field": "amount", "label": "Total Revenue"},
+        {"function": "count", "field": "id", "label": "Total Deals"},
+        {"function": "avg", "field": "amount", "label": "Avg Deal Size"},
+        {"function": "count", "field": "id", "filter": "status=won", "label": "Won Deals"}
+      ],
+      "visualization_hint": "dashboard"
+    },
+    "data_context": {
+      "record_count": 4,
+      "fields_available": ["total_revenue", "deal_count", "avg_deal_size", "won_deals", "win_rate"],
+      "data_types": {
+        "total_revenue": "currency",
+        "avg_deal_size": "currency",
+        "win_rate": "percentage"
+      },
+      "has_missing_values": false,
+      "data_distribution": "aggregated_metrics"
+    },
+    "selected_layout": {
+      "layout_id": "layout_dashboard_metrics_001",
+      "layout_type": "metric_dashboard",
+      "pattern_used": "metric_dashboard",
+      "components_used": ["Stack", "Card", "Metric", "Heading", "Dashlet"],
+      "adaptations_made": [
+        "Arranged metrics in 2x2 grid for balance",
+        "Added trend indicators for each metric",
+        "Included comparison to previous month"
+      ]
+    },
+    "success_metrics": {
+      "satisfaction_score": 0.92,
+      "iterations_needed": 2,
+      "user_feedback": "positive",
+      "reuse_count": 28,
+      "last_used": "2026-02-09",
+      "avg_response_time_ms": 580
+    },
+    "insights": {
+      "key_factors": [
+        "Metric component ideal for KPI visualization",
+        "Grid layout provides balanced view",
+        "Trend indicators add valuable context"
+      ],
+      "avoid_patterns": [
+        "Table - not suitable for aggregated metrics",
+        "List - implies individual records"
+      ],
+      "learned_optimizations": [
+        "Dashboard queries always need aggregation",
+        "4-6 metrics is optimal for scanability",
+        "Always include time period context in header"
+      ]
+    },
+    "tags": ["dashboard", "metrics", "aggregation", "kpi", "analytics"]
+  },
+  {
+    "mapping_id": "qm_004",
+    "timestamp": "2026-02-06T16:45:00Z",
+    "original_query": "show contacts with birthdays this week",
+    "normalized_query": "display contact list filtered birthday current_week",
+    "query_variants": [
+      "contacts with birthdays",
+      "upcoming birthdays",
+      "birthdays this week",
+      "show birthday contacts",
+      "contacts celebrating birthdays"
+    ],
+    "query_intent": "view_list_filtered_special",
+    "query_complexity": 0.5,
+    "decomposition": {
+      "intent": "view_list",
+      "primary_object": "contact",
+      "related_objects": [],
+      "filters": [
+        {
+          "field": "birthday",
+          "operator": "in_range",
+          "value": "this_week",
+          "implicit": false
+        }
+      ],
+      "sorting": {
+        "field": "birthday",
+        "order": "asc"
+      },
+      "limit": null,
+      "aggregations": [],
+      "visualization_hint": "celebration_card"
+    },
+    "data_context": {
+      "record_count": 3,
+      "fields_available": ["name", "birthday", "age", "avatar_url", "department"],
+      "data_types": {
+        "birthday": "date",
+        "age": "number"
+      },
+      "has_missing_values": true,
+      "data_distribution": "small_list"
+    },
+    "selected_layout": {
+      "layout_id": "layout_birthday_cards_001",
+      "layout_type": "celebration_list",
+      "pattern_used": "birthday_celebration",
+      "components_used": ["Stack", "BirthdayCard", "Avatar", "Heading", "Text", "Badge"],
+      "adaptations_made": [
+        "Used special BirthdayCard component for festive feel",
+        "Added age display",
+        "Sorted chronologically by upcoming birthday"
+      ]
+    },
+    "success_metrics": {
+      "satisfaction_score": 0.97,
+      "iterations_needed": 1,
+      "user_feedback": "positive",
+      "reuse_count": 8,
+      "last_used": "2026-02-08",
+      "avg_response_time_ms": 380
+    },
+    "insights": {
+      "key_factors": [
+        "BirthdayCard component adds celebration feel",
+        "Avatar personalization important for recognition",
+        "Chronological ordering makes sense for time-based events"
+      ],
+      "avoid_patterns": [
+        "Plain Table - too corporate for celebrations",
+        "Generic ListCard - misses celebration context"
+      ],
+      "learned_optimizations": [
+        "Birthday/celebration queries should use special components",
+        "Always include avatar for personal touch",
+        "Sort by date when showing time-based events"
+      ]
+    },
+    "tags": ["celebration", "birthday", "special_event", "filtered_list", "personalized"]
+  },
+  {
+    "mapping_id": "qm_005",
+    "timestamp": "2026-02-05T11:20:00Z",
+    "original_query": "show all open opportunities",
+    "normalized_query": "display opportunity list filtered status_open",
+    "query_variants": [
+      "view open opportunities",
+      "list active opportunities",
+      "show open deals",
+      "display active opportunities",
+      "get open opportunity list"
+    ],
+    "query_intent": "view_list_filtered",
+    "query_complexity": 0.4,
+    "decomposition": {
+      "intent": "view_list",
+      "primary_object": "opportunity",
+      "related_objects": ["account"],
+      "filters": [
+        {
+          "field": "status",
+          "operator": "in",
+          "value": ["open", "in_progress"],
+          "implicit": true
+        }
+      ],
+      "sorting": {
+        "field": "amount",
+        "order": "desc"
+      },
+      "limit": null,
+      "aggregations": [],
+      "visualization_hint": "list"
+    },
+    "data_context": {
+      "record_count": 15,
+      "fields_available": ["name", "account_name", "amount", "stage", "close_date", "probability"],
+      "data_types": {
+        "amount": "currency",
+        "close_date": "date",
+        "probability": "percentage"
+      },
+      "has_missing_values": false,
+      "data_distribution": "medium_list"
+    },
+    "selected_layout": {
+      "layout_id": "layout_opportunity_list_001",
+      "layout_type": "structured_list",
+      "pattern_used": "user_avatar_list",
+      "components_used": ["Stack", "ListCard", "Heading", "Text", "Badge", "Metric"],
+      "adaptations_made": [
+        "Used account icon instead of avatar",
+        "Added probability as Badge with color coding",
+        "Displayed amount as prominent Metric",
+        "Sorted by amount descending"
+      ]
+    },
+    "success_metrics": {
+      "satisfaction_score": 0.91,
+      "iterations_needed": 1,
+      "user_feedback": "positive",
+      "reuse_count": 34,
+      "last_used": "2026-02-09",
+      "avg_response_time_ms": 420
+    },
+    "insights": {
+      "key_factors": [
+        "ListCard works well for 10-30 records",
+        "Badge color-coding for probability aids quick assessment",
+        "Amount as Metric component draws attention to value"
+      ],
+      "avoid_patterns": [
+        "Table - too dense for this record count",
+        "Card grid - amount field needs more prominence"
+      ],
+      "learned_optimizations": [
+        "Opportunity lists should highlight monetary values",
+        "Stage/probability work well as color-coded badges",
+        "Default sort by amount for business context"
+      ]
+    },
+    "tags": ["list", "filtered", "opportunities", "business_data"]
+  },
+  {
+    "mapping_id": "qm_006",
+    "timestamp": "2026-02-04T13:50:00Z",
+    "original_query": "create new lead",
+    "normalized_query": "form create_new lead",
+    "query_variants": [
+      "add new lead",
+      "create lead form",
+      "new lead entry",
+      "add lead",
+      "create a lead"
+    ],
+    "query_intent": "create_new",
+    "query_complexity": 0.5,
+    "decomposition": {
+      "intent": "create",
+      "primary_object": "lead",
+      "related_objects": [],
+      "filters": [],
+      "sorting": null,
+      "limit": null,
+      "aggregations": [],
+      "visualization_hint": "form"
+    },
+    "data_context": {
+      "record_count": 0,
+      "fields_available": ["name", "company", "email", "phone", "status", "source"],
+      "data_types": {
+        "name": "string_required",
+        "email": "email_required",
+        "phone": "phone",
+        "status": "enum"
+      },
+      "has_missing_values": false,
+      "data_distribution": "form_schema"
+    },
+    "selected_layout": {
+      "layout_id": "layout_lead_form_001",
+      "layout_type": "vertical_form",
+      "pattern_used": "form_layout_vertical",
+      "components_used": ["Card", "Stack", "Label", "Text", "Button", "Heading"],
+      "adaptations_made": [
+        "Organized fields in logical order",
+        "Marked required fields with asterisk",
+        "Added field validation hints",
+        "Included Save and Cancel buttons"
+      ]
+    },
+    "success_metrics": {
+      "satisfaction_score": 0.89,
+      "iterations_needed": 2,
+      "user_feedback": "neutral",
+      "reuse_count": 18,
+      "last_used": "2026-02-08",
+      "avg_response_time_ms": 510
+    },
+    "insights": {
+      "key_factors": [
+        "Vertical form layout standard for data entry",
+        "Clear required field indicators important",
+        "Logical field ordering improves UX"
+      ],
+      "avoid_patterns": [
+        "Horizontal form - too wide for many fields",
+        "Table - not suitable for data entry"
+      ],
+      "learned_optimizations": [
+        "Create/edit queries always need form layouts",
+        "Group related fields together",
+        "Always include clear submit/cancel actions"
+      ]
+    },
+    "tags": ["form", "create", "data_entry", "input"]
+  },
+  {
+    "mapping_id": "qm_007",
+    "timestamp": "2026-02-03T10:05:00Z",
+    "original_query": "show recent activities",
+    "normalized_query": "display activity list sorted recent chronological",
+    "query_variants": [
+      "view recent activities",
+      "show activity history",
+      "recent activity log",
+      "activity timeline",
+      "latest activities"
+    ],
+    "query_intent": "view_list_chronological",
+    "query_complexity": 0.4,
+    "decomposition": {
+      "intent": "view_list",
+      "primary_object": "activity",
+      "related_objects": ["user"],
+      "filters": [
+        {
+          "field": "created_date",
+          "operator": ">",
+          "value": "last_30_days",
+          "implicit": true
+        }
+      ],
+      "sorting": {
+        "field": "created_date",
+        "order": "desc"
+      },
+      "limit": 20,
+      "aggregations": [],
+      "visualization_hint": "timeline"
+    },
+    "data_context": {
+      "record_count": 20,
+      "fields_available": ["activity_type", "description", "user", "timestamp", "related_to"],
+      "data_types": {
+        "timestamp": "datetime",
+        "activity_type": "enum"
+      },
+      "has_missing_values": true,
+      "data_distribution": "chronological"
+    },
+    "selected_layout": {
+      "layout_id": "layout_activity_timeline_001",
+      "layout_type": "timeline_list",
+      "pattern_used": "timeline_list",
+      "components_used": ["Stack", "Card", "Label", "Text", "Badge", "Avatar", "Divider"],
+      "adaptations_made": [
+        "Added timestamp labels with relative time",
+        "Activity type shown as Badge",
+        "User avatar for each activity",
+        "Divider between days"
+      ]
+    },
+    "success_metrics": {
+      "satisfaction_score": 0.94,
+      "iterations_needed": 1,
+      "user_feedback": "positive",
+      "reuse_count": 22,
+      "last_used": "2026-02-09",
+      "avg_response_time_ms": 395
+    },
+    "insights": {
+      "key_factors": [
+        "Timeline pattern perfect for chronological data",
+        "Relative timestamps improve readability",
+        "Dividers between date groups aid scanning"
+      ],
+      "avoid_patterns": [
+        "Table - loses chronological flow",
+        "Card grid - not suited for sequential data"
+      ],
+      "learned_optimizations": [
+        "Activity/history queries need timeline layouts",
+        "Always show relative time for recent items",
+        "Group by date for better organization"
+      ]
+    },
+    "tags": ["timeline", "chronological", "activity", "history", "recent"]
+  },
+  {
+    "mapping_id": "qm_008",
+    "timestamp": "2026-02-02T15:30:00Z",
+    "original_query": "filter leads by status hot",
+    "normalized_query": "display lead list filtered status_hot",
+    "query_variants": [
+      "show hot leads",
+      "leads with hot status",
+      "filter by hot status",
+      "view hot leads only",
+      "hot leads list"
+    ],
+    "query_intent": "view_list_filtered",
+    "query_complexity": 0.3,
+    "decomposition": {
+      "intent": "view_list",
+      "primary_object": "lead",
+      "related_objects": [],
+      "filters": [
+        {
+          "field": "status",
+          "operator": "=",
+          "value": "hot",
+          "implicit": false
+        }
+      ],
+      "sorting": {
+        "field": "created_date",
+        "order": "desc"
+      },
+      "limit": null,
+      "aggregations": [],
+      "visualization_hint": "list"
+    },
+    "data_context": {
+      "record_count": 8,
+      "fields_available": ["name", "company", "status", "revenue", "owner", "created_date"],
+      "data_types": {
+        "revenue": "currency",
+        "created_date": "date"
+      },
+      "has_missing_values": false,
+      "data_distribution": "small_list"
+    },
+    "selected_layout": {
+      "layout_id": "layout_lead_status_list_001",
+      "layout_type": "compact_status_list",
+      "pattern_used": "status_list_compact",
+      "components_used": ["Stack", "Card", "Badge", "Heading", "Text", "Metric"],
+      "adaptations_made": [
+        "Prominent status badge with hot color",
+        "Revenue shown as Metric",
+        "Compact cards for quick scanning"
+      ]
+    },
+    "success_metrics": {
+      "satisfaction_score": 0.93,
+      "iterations_needed": 1,
+      "user_feedback": "positive",
+      "reuse_count": 16,
+      "last_used": "2026-02-09",
+      "avg_response_time_ms": 340
+    },
+    "insights": {
+      "key_factors": [
+        "Status-focused queries need prominent Badge display",
+        "Compact layout works for filtered small lists",
+        "Color-coding by status aids quick identification"
+      ],
+      "avoid_patterns": [
+        "Table - too formal for small filtered lists",
+        "Detail cards - too much space per item"
+      ],
+      "learned_optimizations": [
+        "Filter queries should show filter criteria clearly",
+        "Status badges should use semantic colors",
+        "Compact layouts better for <10 items"
+      ]
+    },
+    "tags": ["filtered", "status", "compact", "badge"]
+  }
+]

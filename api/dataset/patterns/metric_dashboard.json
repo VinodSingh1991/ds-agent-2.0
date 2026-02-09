@@ -1,0 +1,59 @@
+{
+  "pattern_id": "metric_dashboard",
+  "pattern_name": "Metric Dashboard Pattern",
+  "description": "Display key performance indicators and metrics in a scannable dashboard layout. Perfect for executive summaries, KPI tracking, and performance monitoring.",
+  "use_cases": [
+    "sales dashboard",
+    "performance metrics overview",
+    "KPI summary",
+    "executive dashboard",
+    "analytics snapshot",
+    "team performance view",
+    "monthly summary"
+  ],
+  "components": {
+    "container": "Stack",
+    "item_wrapper": "Card",
+    "primary_component": "Metric",
+    "supporting_components": ["Dashlet", "Heading", "Badge", "Divider"],
+    "layout_direction": "horizontal-wrap"
+  },
+  "data_requirements": {
+    "min_fields": ["value", "label"],
+    "recommended_fields": ["value", "label", "trend", "target", "change"],
+    "data_shape": "object|array",
+    "ideal_record_count": "3-12",
+    "data_types": {
+      "value": "number|currency|percentage",
+      "label": "string",
+      "trend": "up|down|neutral",
+      "change": "percentage"
+    }
+  },
+  "schema_structure": {
+    "type": "Stack",
+    "props": {"direction": "horizontal", "gap": "medium", "wrap": true},
+    "children": [
+      {
+        "type": "Card",
+        "repeat": "metrics",
+        "props": {"variant": "elevated"},
+        "children": [
+          {
+            "type": "Metric",
+            "props": {
+              "value": "{{value}}",
+              "label": "{{label}}",
+              "trend": "{{trend}}",
+              "format": "auto"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "complexity": "low",
+  "best_for": ["aggregated_data", "kpi_tracking", "quick_overview", "numeric_focus"],
+  "avoid_when": ["detailed_records", "text_heavy", "complex_filtering"]
+}
+

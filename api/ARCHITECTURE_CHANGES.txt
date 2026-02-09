@@ -1,0 +1,174 @@
+================================================================================
+ARCHITECTURE CHANGES - DATA SEPARATION
+================================================================================
+
+Date: 2024-02-09
+Change: Separated data fetching logic from layout generation
+
+================================================================================
+WHAT CHANGED
+================================================================================
+
+BEFORE:
+- Agent had 4 components: QueryAnalyzer, CandidateRetriever, DataFetcher, LayoutGenerator
+- Agent would fetch data internally using DataFetcher
+- Data parameter was OPTIONAL in generate() method
+- Agent had 4-step pipeline: Analyze → Retrieve → Fetch Data → Generate
+
+AFTER:
+- Agent has 3 components: QueryAnalyzer, CandidateRetriever, LayoutGenerator
+- Agent does NOT fetch data - data must be provided from outside
+- Data parameter is REQUIRED in generate() method
+- Agent has 3-step pipeline: Analyze → Retrieve → Generate
+
+================================================================================
+WHY THIS CHANGE
+================================================================================
+
+1. Separation of Concerns
+   - Layout generation is separate from data fetching
+   - Agent focuses on ONE job: generating layouts
+
+2. Flexibility
+   - Users can fetch data from ANY source (database, API, cache, etc.)
+   - No need to modify agent for different data sources
+
+3. Reusability
+   - Same agent works with any data structure
+   - No coupling to specific data fetching logic
+
+4. Testability
+   - Easy to test with mock data
+   - No need to mock data sources
+
+================================================================================
+CODE CHANGES
+================================================================================
+
+1. agent/structured_ui_agent_v2.py
+   - Removed: from agent.data_fetcher import DataFetcher
+   - Removed: data_source parameter from __init__
+   - Removed: self.data_fetcher initialization
+   - Changed: data parameter from Optional to REQUIRED
+   - Changed: 4-step pipeline to 3-step pipeline
+   - Updated: get_stats() to show 3 components instead of 4
+
+2. api/main.py
+   - Changed: GenerateRequest.data from Optional to REQUIRED
+   - Updated: Endpoint documentation to emphasize external data
+   - Added: Example showing how to pass data
+
+================================================================================
+HOW TO USE (BEFORE vs AFTER)
+================================================================================
+
+BEFORE (Old Way - No Longer Works):
+```python
+agent = StructuredUIAgent()
+
+# Agent fetches data internally
+layout = agent.generate("show me all leads")
+```
+
+AFTER (New Way - Required):
+```python
+agent = StructuredUIAgent()
+
+# You fetch data from your application
+leads_data = fetch_leads_from_database()  # Your code
+
+# Agent generates layout
+layout = agent.generate(
+    query="show me all leads",
+    data=leads_data
+)
+```
+
+================================================================================
+API USAGE (BEFORE vs AFTER)
+================================================================================
+
+BEFORE (Old Way):
+```json
+POST /generate
+{
+  "query": "show me all leads"
+}
+```
+
+AFTER (New Way):
+```json
+POST /generate
+{
+  "query": "show me all leads",
+  "data": [
+    {"id": 1, "name": "Acme Corp", "revenue": 75000, "status": "qualified"},
+    {"id": 2, "name": "TechStart", "revenue": 120000, "status": "negotiation"}
+  ]
+}
+```
+
+================================================================================
+MIGRATION GUIDE
+================================================================================
+
+If you have existing code using the old agent:
+
+Step 1: Add data fetching logic
+```python
+# OLD
+layout = agent.generate("show me all leads")
+
+# NEW
+leads_data = your_data_source.get_leads()  # Add this
+layout = agent.generate("show me all leads", data=leads_data)
+```
+
+Step 2: Update API calls
+```python
+# OLD
+response = requests.post("/generate", json={"query": "show me all leads"})
+
+# NEW
+leads_data = get_leads_from_your_db()
+response = requests.post("/generate", json={
+    "query": "show me all leads",
+    "data": leads_data
+})
+```
+
+================================================================================
+DATA FETCHER FILE STATUS
+================================================================================
+
+File: agent/data_fetcher.py
+
+Status: STILL EXISTS but NOT USED by agent
+
+Purpose: Reference for data structure examples
+
+Contains: Mock data for 7 object types (Lead, Contact, Deal, Case, Account, Branch, Product)
+
+Use it for:
+- Understanding what data structures look like
+- Testing with mock data
+- Reference when building your own data fetching logic
+
+DO NOT use it for:
+- Production data fetching (implement your own)
+- Automatic data fetching (agent doesn't do this anymore)
+
+================================================================================
+BENEFITS
+================================================================================
+
+✅ Clean separation of concerns
+✅ Agent focuses on layout generation only
+✅ Flexible - works with any data source
+✅ Testable - easy to provide mock data
+✅ Reusable - same agent for all applications
+✅ No coupling to specific data sources
+✅ Easier to maintain and extend
+
+================================================================================
+

@@ -1,0 +1,185 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Start API Server",
+            "type": "shell",
+            "command": "python",
+            "args": [
+                "start_api.py",
+                "--reload"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}/api"
+            },
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated",
+                "focus": false
+            },
+            "isBackground": true,
+            "runOptions": {
+                "instanceLimit": 1
+            }
+        },
+        {
+            "label": "Stop API Server",
+            "type": "shell",
+            "command": "taskkill /F /IM python.exe /FI \"WINDOWTITLE eq *start_api.py*\"",
+            "windows": {
+                "command": "Get-Process python | Where-Object {$_.MainWindowTitle -like '*start_api*'} | Stop-Process -Force"
+            },
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "silent"
+            }
+        },
+        {
+            "label": "Generate Chunks",
+            "type": "shell",
+            "command": "python",
+            "args": [
+                "generate_chunks.py"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}/api"
+            },
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated"
+            }
+        },
+        {
+            "label": "Build Vector Index",
+            "type": "shell",
+            "command": "python",
+            "args": [
+                "build_vector_index.py"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}/api"
+            },
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated"
+            }
+        },
+        {
+            "label": "Test API",
+            "type": "shell",
+            "command": "python",
+            "args": [
+                "test_api.py"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}/api"
+            },
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated"
+            }
+        },
+        {
+            "label": "Test Reindex",
+            "type": "shell",
+            "command": "python",
+            "args": [
+                "test_reindex.py"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}/api"
+            },
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated"
+            }
+        },
+        {
+            "label": "Install Dependencies",
+            "type": "shell",
+            "command": "pip",
+            "args": [
+                "install",
+                "-r",
+                "requirements.txt"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}/api"
+            },
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated"
+            }
+        },
+        {
+            "label": "Check Port 8000",
+            "type": "shell",
+            "command": "netstat -ano | findstr :8000",
+            "windows": {
+                "command": "netstat -ano | findstr :8000"
+            },
+            "linux": {
+                "command": "lsof -i :8000"
+            },
+            "osx": {
+                "command": "lsof -i :8000"
+            },
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated"
+            }
+        },
+        {
+            "label": "Open API Docs",
+            "type": "shell",
+            "command": "start",
+            "args": [
+                "http://localhost:8000/docs"
+            ],
+            "windows": {
+                "command": "start",
+                "args": [
+                    "http://localhost:8000/docs"
+                ]
+            },
+            "linux": {
+                "command": "xdg-open",
+                "args": [
+                    "http://localhost:8000/docs"
+                ]
+            },
+            "osx": {
+                "command": "open",
+                "args": [
+                    "http://localhost:8000/docs"
+                ]
+            },
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "silent"
+            }
+        },
+        {
+            "label": "Full Setup",
+            "dependsOrder": "sequence",
+            "dependsOn": [
+                "Install Dependencies",
+                "Generate Chunks",
+                "Build Vector Index"
+            ],
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated"
+            }
+        }
+    ]
+}
+

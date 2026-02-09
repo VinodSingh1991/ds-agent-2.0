@@ -1,0 +1,786 @@
+[
+  {
+    "pattern_id": "user_avatar_list",
+    "pattern_name": "User Avatar List Pattern",
+    "description": "Display a list of people/users with avatars, names, and metadata. Perfect for contact lists, team members, or lead lists where visual identification is important.",
+    "use_cases": [
+      "contact list with photos",
+      "team member directory",
+      "lead list with avatars",
+      "user selection dropdown",
+      "recipient picker",
+      "sales team roster",
+      "customer list view"
+    ],
+    "components": {
+      "container": "Stack",
+      "item_wrapper": "ListCard",
+      "required_components": ["Avatar", "Heading"],
+      "optional_components": ["Text", "Badge", "Button", "Link"],
+      "layout_direction": "vertical"
+    },
+    "data_requirements": {
+      "min_fields": ["name"],
+      "recommended_fields": ["avatar_url", "role", "status", "company"],
+      "data_shape": "array",
+      "ideal_record_count": "3-100",
+      "data_types": {
+        "name": "string",
+        "avatar_url": "url|null",
+        "status": "enum",
+        "role": "string"
+      }
+    },
+    "schema_structure": {
+      "type": "Stack",
+      "props": {"direction": "vertical", "gap": "small"},
+      "children": [
+        {
+          "type": "ListCard",
+          "repeat": "data",
+          "children": [
+            {"type": "Avatar", "binds_to": "avatar_url", "fallback": "initials"},
+            {"type": "Heading", "binds_to": "name", "level": 3},
+            {"type": "Text", "binds_to": "role", "optional": true},
+            {"type": "Badge", "binds_to": "status", "optional": true}
+          ]
+        }
+      ]
+    },
+    "complexity": "medium",
+    "best_for": ["multiple_records", "visual_identification", "people_data"],
+    "avoid_when": ["single_record", "no_images", "data_heavy_comparison"]
+  },
+  {
+    "pattern_id": "data_table_pattern",
+    "pattern_name": "Data Table Pattern",
+    "description": "Structured table layout for comparing multiple records with similar attributes. Ideal for data-heavy views where users need to scan, sort, and compare values across rows.",
+    "use_cases": [
+      "lead comparison table",
+      "opportunity pipeline view",
+      "account listing with metrics",
+      "transaction history",
+      "inventory list",
+      "report data view",
+      "multi-column comparison"
+    ],
+    "components": {
+      "container": "Card",
+      "primary_component": "Table",
+      "supporting_components": ["Heading", "Badge", "Button", "Metric"],
+      "layout_direction": "vertical"
+    },
+    "data_requirements": {
+      "min_fields": ["id"],
+      "recommended_fields": ["name", "status", "value", "date"],
+      "data_shape": "array",
+      "ideal_record_count": "5-1000",
+      "data_types": {
+        "id": "string|number",
+        "name": "string",
+        "status": "enum",
+        "value": "number|currency",
+        "date": "date"
+      }
+    },
+    "schema_structure": {
+      "type": "Card",
+      "props": {"variant": "outlined", "padding": "medium"},
+      "children": [
+        {"type": "Heading", "value": {"text": "{{title}}"}, "level": 2},
+        {
+          "type": "Table",
+          "props": {
+            "columns": "{{columns}}",
+            "sortable": true,
+            "filterable": true,
+            "paginated": true
+          },
+          "binds_to": "data"
+        }
+      ]
+    },
+    "complexity": "medium",
+    "best_for": ["data_comparison", "many_attributes", "sorting_filtering", "large_datasets"],
+    "avoid_when": ["single_record", "image_heavy", "hierarchical_data", "less_than_3_records"]
+  },
+  {
+    "pattern_id": "metric_dashboard",
+    "pattern_name": "Metric Dashboard Pattern",
+    "description": "Display key performance indicators and metrics in a scannable dashboard layout. Perfect for executive summaries, KPI tracking, and performance monitoring.",
+    "use_cases": [
+      "sales dashboard",
+      "performance metrics overview",
+      "KPI summary",
+      "executive dashboard",
+      "analytics snapshot",
+      "team performance view",
+      "monthly summary"
+    ],
+    "components": {
+      "container": "Stack",
+      "item_wrapper": "Card",
+      "primary_component": "Metric",
+      "supporting_components": ["Dashlet", "Heading", "Badge", "Divider"],
+      "layout_direction": "horizontal-wrap"
+    },
+    "data_requirements": {
+      "min_fields": ["value", "label"],
+      "recommended_fields": ["value", "label", "trend", "target", "change"],
+      "data_shape": "object|array",
+      "ideal_record_count": "3-12",
+      "data_types": {
+        "value": "number|currency|percentage",
+        "label": "string",
+        "trend": "up|down|neutral",
+        "change": "percentage"
+      }
+    },
+    "schema_structure": {
+      "type": "Stack",
+      "props": {"direction": "horizontal", "gap": "medium", "wrap": true},
+      "children": [
+        {
+          "type": "Card",
+          "repeat": "metrics",
+          "props": {"variant": "elevated"},
+          "children": [
+            {
+              "type": "Metric",
+              "props": {
+                "value": "{{value}}",
+                "label": "{{label}}",
+                "trend": "{{trend}}",
+                "format": "auto"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "complexity": "low",
+    "best_for": ["aggregated_data", "kpi_tracking", "quick_overview", "numeric_focus"],
+    "avoid_when": ["detailed_records", "text_heavy", "complex_filtering"]
+  },
+  {
+    "pattern_id": "detail_view_card",
+    "pattern_name": "Detail View Card Pattern",
+    "description": "Comprehensive single-record view with all details organized in sections. Perfect for viewing complete information about a lead, contact, or opportunity.",
+    "use_cases": [
+      "lead detail page",
+      "contact profile view",
+      "opportunity details",
+      "account overview",
+      "product detail page",
+      "case details",
+      "record full view"
+    ],
+    "components": {
+      "container": "Card",
+      "sections": "Stack",
+      "primary_components": ["Heading", "Text", "Label", "Badge"],
+      "supporting_components": ["Avatar", "Button", "Link", "Divider", "Image"],
+      "layout_direction": "vertical"
+    },
+    "data_requirements": {
+      "min_fields": ["name"],
+      "recommended_fields": ["name", "status", "owner", "created_date", "description"],
+      "data_shape": "object",
+      "ideal_record_count": "1",
+      "data_types": {
+        "name": "string",
+        "status": "enum",
+        "description": "text",
+        "owner": "string",
+        "created_date": "date"
+      }
+    },
+    "schema_structure": {
+      "type": "Card",
+      "props": {"variant": "elevated", "padding": "large"},
+      "children": [
+        {
+          "type": "Stack",
+          "props": {"direction": "vertical", "gap": "medium"},
+          "children": [
+            {"type": "Heading", "binds_to": "name", "level": 1},
+            {"type": "Badge", "binds_to": "status"},
+            {"type": "Divider"},
+            {
+              "type": "Stack",
+              "props": {"direction": "vertical", "gap": "small"},
+              "children": [
+                {"type": "Label", "value": {"text": "Owner"}},
+                {"type": "Text", "binds_to": "owner"}
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "complexity": "medium",
+    "best_for": ["single_record", "detailed_information", "profile_views", "comprehensive_data"],
+    "avoid_when": ["multiple_records", "comparison_needed", "list_view"]
+  },
+  {
+    "pattern_id": "status_list_compact",
+    "pattern_name": "Status List Compact Pattern",
+    "description": "Compact list view with status indicators and key information. Optimized for quick scanning of records with visual status cues.",
+    "use_cases": [
+      "task list with status",
+      "notification list",
+      "activity feed",
+      "quick status overview",
+      "alert list",
+      "recent items view",
+      "compact notifications"
+    ],
+    "components": {
+      "container": "Stack",
+      "item_wrapper": "Card",
+      "primary_components": ["Badge", "Text", "Heading"],
+      "supporting_components": ["Button", "Link", "Label"],
+      "layout_direction": "vertical"
+    },
+    "data_requirements": {
+      "min_fields": ["title", "status"],
+      "recommended_fields": ["title", "status", "description", "timestamp"],
+      "data_shape": "array",
+      "ideal_record_count": "3-20",
+      "data_types": {
+        "title": "string",
+        "status": "enum",
+        "description": "string",
+        "timestamp": "date"
+      }
+    },
+    "schema_structure": {
+      "type": "Stack",
+      "props": {"direction": "vertical", "gap": "small"},
+      "children": [
+        {
+          "type": "Card",
+          "repeat": "data",
+          "props": {"variant": "outlined", "padding": "small"},
+          "children": [
+            {"type": "Badge", "binds_to": "status"},
+            {"type": "Heading", "binds_to": "title", "level": 4},
+            {"type": "Text", "binds_to": "description", "optional": true}
+          ]
+        }
+      ]
+    },
+    "complexity": "low",
+    "best_for": ["status_tracking", "compact_lists", "quick_scan", "notifications"],
+    "avoid_when": ["detailed_data", "many_fields", "comparison_needed"]
+  },
+  {
+    "pattern_id": "form_layout_vertical",
+    "pattern_name": "Vertical Form Layout Pattern",
+    "description": "Standard vertical form layout with labels and input fields. Used for data entry, editing records, and creating new items.",
+    "use_cases": [
+      "create new lead form",
+      "edit contact details",
+      "data entry form",
+      "settings page",
+      "profile editor",
+      "search filters form",
+      "input collection"
+    ],
+    "components": {
+      "container": "Card",
+      "form_wrapper": "Stack",
+      "primary_components": ["Label", "Text"],
+      "supporting_components": ["Button", "Heading", "Divider"],
+      "layout_direction": "vertical"
+    },
+    "data_requirements": {
+      "min_fields": [],
+      "recommended_fields": ["field_name", "field_type", "required"],
+      "data_shape": "object|schema",
+      "ideal_record_count": "1",
+      "data_types": {
+        "field_value": "any",
+        "field_label": "string"
+      }
+    },
+    "schema_structure": {
+      "type": "Card",
+      "props": {"variant": "outlined", "padding": "large"},
+      "children": [
+        {"type": "Heading", "value": {"text": "{{form_title}}"}, "level": 2},
+        {
+          "type": "Stack",
+          "props": {"direction": "vertical", "gap": "medium"},
+          "children": [
+            {
+              "type": "Stack",
+              "repeat": "fields",
+              "props": {"direction": "vertical", "gap": "xsmall"},
+              "children": [
+                {"type": "Label", "value": {"text": "{{field_label}}"}},
+                {"type": "Text", "binds_to": "{{field_name}}"}
+              ]
+            }
+          ]
+        },
+        {"type": "Button", "value": {"text": "Submit"}}
+      ]
+    },
+    "complexity": "medium",
+    "best_for": ["data_entry", "editing", "forms", "settings"],
+    "avoid_when": ["read_only_data", "list_views", "dashboards"]
+  },
+  {
+    "pattern_id": "card_grid_pattern",
+    "pattern_name": "Card Grid Pattern",
+    "description": "Grid layout of cards displaying records with images or icons. Perfect for product catalogs, portfolio views, or visual-first content.",
+    "use_cases": [
+      "product catalog",
+      "account grid view",
+      "opportunity cards",
+      "portfolio display",
+      "image gallery with metadata",
+      "visual directory",
+      "tile-based navigation"
+    ],
+    "components": {
+      "container": "Stack",
+      "item_wrapper": "Card",
+      "primary_components": ["Image", "Heading", "Text"],
+      "supporting_components": ["Badge", "Button", "Metric", "Avatar"],
+      "layout_direction": "horizontal-wrap"
+    },
+    "data_requirements": {
+      "min_fields": ["title"],
+      "recommended_fields": ["title", "image_url", "description", "status"],
+      "data_shape": "array",
+      "ideal_record_count": "3-50",
+      "data_types": {
+        "title": "string",
+        "image_url": "url|null",
+        "description": "string",
+        "status": "enum"
+      }
+    },
+    "schema_structure": {
+      "type": "Stack",
+      "props": {"direction": "horizontal", "gap": "medium", "wrap": true},
+      "children": [
+        {
+          "type": "Card",
+          "repeat": "data",
+          "props": {"variant": "elevated", "width": "250px"},
+          "children": [
+            {"type": "Image", "binds_to": "image_url", "optional": true},
+            {"type": "Heading", "binds_to": "title", "level": 3},
+            {"type": "Text", "binds_to": "description", "optional": true},
+            {"type": "Badge", "binds_to": "status", "optional": true}
+          ]
+        }
+      ]
+    },
+    "complexity": "medium",
+    "best_for": ["visual_content", "grid_layout", "image_heavy", "browsing"],
+    "avoid_when": ["text_heavy", "data_comparison", "many_attributes"]
+  },
+  {
+    "pattern_id": "alert_notification",
+    "pattern_name": "Alert/Notification Pattern",
+    "description": "Display important messages, alerts, warnings, or success notifications to users. Supports different severity levels with appropriate visual styling.",
+    "use_cases": [
+      "error messages",
+      "success confirmations",
+      "warning alerts",
+      "info notifications",
+      "system messages",
+      "banner alerts",
+      "inline notifications"
+    ],
+    "components": {
+      "container": "Alert",
+      "primary_components": ["Heading", "Text"],
+      "supporting_components": ["Button", "Link"],
+      "layout_direction": "vertical"
+    },
+    "data_requirements": {
+      "min_fields": ["message"],
+      "recommended_fields": ["message", "severity", "title", "action"],
+      "data_shape": "object",
+      "ideal_record_count": "1",
+      "data_types": {
+        "message": "string",
+        "severity": "success|warning|error|info",
+        "title": "string"
+      }
+    },
+    "schema_structure": {
+      "type": "Alert",
+      "props": {"severity": "{{severity}}"},
+      "children": [
+        {"type": "Heading", "binds_to": "title", "level": 4, "optional": true},
+        {"type": "Text", "binds_to": "message"},
+        {"type": "Button", "value": {"text": "{{action_label}}"}, "optional": true}
+      ]
+    },
+    "complexity": "low",
+    "best_for": ["notifications", "alerts", "messages", "feedback"],
+    "avoid_when": ["data_display", "lists", "forms"]
+  },
+  {
+    "pattern_id": "insights_card",
+    "pattern_name": "AI Insights Card Pattern",
+    "description": "Display AI-generated insights, recommendations, or analysis. Features prominent visual styling to highlight intelligent suggestions.",
+    "use_cases": [
+      "AI recommendations",
+      "smart suggestions",
+      "predictive insights",
+      "analysis summary",
+      "next best action",
+      "intelligent alerts",
+      "data-driven tips"
+    ],
+    "components": {
+      "container": "Card",
+      "primary_component": "Insights",
+      "supporting_components": ["Heading", "Text", "Button", "Badge"],
+      "layout_direction": "vertical"
+    },
+    "data_requirements": {
+      "min_fields": ["insight_text"],
+      "recommended_fields": ["insight_text", "confidence", "category", "action"],
+      "data_shape": "object|array",
+      "ideal_record_count": "1-5",
+      "data_types": {
+        "insight_text": "string",
+        "confidence": "percentage",
+        "category": "string",
+        "action": "string"
+      }
+    },
+    "schema_structure": {
+      "type": "Card",
+      "props": {"variant": "elevated", "padding": "medium"},
+      "children": [
+        {"type": "Heading", "value": {"text": "Insights"}, "level": 3},
+        {
+          "type": "Insights",
+          "props": {
+            "text": "{{insight_text}}",
+            "confidence": "{{confidence}}"
+          }
+        },
+        {"type": "Button", "value": {"text": "{{action_text}}"}, "optional": true}
+      ]
+    },
+    "complexity": "low",
+    "best_for": ["ai_features", "recommendations", "suggestions", "predictive"],
+    "avoid_when": ["simple_data", "lists", "forms"]
+  },
+  {
+    "pattern_id": "birthday_celebration",
+    "pattern_name": "Birthday/Celebration Card Pattern",
+    "description": "Special celebratory card for birthdays, anniversaries, or special events. Features festive styling and personalization.",
+    "use_cases": [
+      "employee birthdays",
+      "work anniversaries",
+      "milestone celebrations",
+      "special events",
+      "recognition cards",
+      "team celebrations"
+    ],
+    "components": {
+      "container": "Card",
+      "primary_component": "BirthdayCard",
+      "supporting_components": ["Avatar", "Heading", "Text", "Button"],
+      "layout_direction": "vertical"
+    },
+    "data_requirements": {
+      "min_fields": ["name", "event_type"],
+      "recommended_fields": ["name", "event_type", "date", "message", "avatar_url"],
+      "data_shape": "object",
+      "ideal_record_count": "1",
+      "data_types": {
+        "name": "string",
+        "event_type": "birthday|anniversary|milestone",
+        "date": "date"
+      }
+    },
+    "schema_structure": {
+      "type": "BirthdayCard",
+      "props": {
+        "name": "{{name}}",
+        "event": "{{event_type}}",
+        "date": "{{date}}"
+      },
+      "children": [
+        {"type": "Avatar", "binds_to": "avatar_url", "optional": true},
+        {"type": "Heading", "binds_to": "name", "level": 2},
+        {"type": "Text", "binds_to": "message", "optional": true}
+      ]
+    },
+    "complexity": "low",
+    "best_for": ["celebrations", "special_events", "recognition", "personal_touch"],
+    "avoid_when": ["business_data", "formal_views", "data_heavy"]
+  },
+  {
+    "pattern_id": "chip_filter_bar",
+    "pattern_name": "Chip Filter Bar Pattern",
+    "description": "Horizontal bar of filter chips for quick filtering and selection. Perfect for tag filtering, category selection, and multi-select filters.",
+    "use_cases": [
+      "filter by status",
+      "category selection",
+      "tag filtering",
+      "multi-select filters",
+      "quick filter bar",
+      "applied filters display",
+      "removable selections"
+    ],
+    "components": {
+      "container": "Stack",
+      "primary_component": "Chip",
+      "supporting_components": ["Label", "Button"],
+      "layout_direction": "horizontal"
+    },
+    "data_requirements": {
+      "min_fields": ["label"],
+      "recommended_fields": ["label", "value", "selected", "removable"],
+      "data_shape": "array",
+      "ideal_record_count": "2-20",
+      "data_types": {
+        "label": "string",
+        "value": "any",
+        "selected": "boolean"
+      }
+    },
+    "schema_structure": {
+      "type": "Stack",
+      "props": {"direction": "horizontal", "gap": "small", "wrap": true},
+      "children": [
+        {
+          "type": "Chip",
+          "repeat": "filters",
+          "props": {
+            "label": "{{label}}",
+            "selected": "{{selected}}",
+            "removable": true
+          }
+        }
+      ]
+    },
+    "complexity": "low",
+    "best_for": ["filtering", "tags", "selections", "categories"],
+    "avoid_when": ["complex_data", "single_selection", "hierarchical"]
+  },
+  {
+    "pattern_id": "timeline_list",
+    "pattern_name": "Timeline/Activity List Pattern",
+    "description": "Chronological list of activities or events with timestamps. Perfect for activity feeds, history logs, and timeline views.",
+    "use_cases": [
+      "activity history",
+      "change log",
+      "timeline view",
+      "event history",
+      "audit trail",
+      "communication log",
+      "status changes"
+    ],
+    "components": {
+      "container": "Stack",
+      "item_wrapper": "Card",
+      "primary_components": ["Text", "Label"],
+      "supporting_components": ["Badge", "Avatar", "Divider", "Link"],
+      "layout_direction": "vertical"
+    },
+    "data_requirements": {
+      "min_fields": ["event", "timestamp"],
+      "recommended_fields": ["event", "timestamp", "user", "description"],
+      "data_shape": "array",
+      "ideal_record_count": "5-100",
+      "data_types": {
+        "event": "string",
+        "timestamp": "datetime",
+        "user": "string",
+        "description": "string"
+      }
+    },
+    "schema_structure": {
+      "type": "Stack",
+      "props": {"direction": "vertical", "gap": "small"},
+      "children": [
+        {
+          "type": "Stack",
+          "repeat": "events",
+          "props": {"direction": "vertical", "gap": "xsmall"},
+          "children": [
+            {"type": "Label", "binds_to": "timestamp"},
+            {"type": "Text", "binds_to": "event"},
+            {"type": "Text", "binds_to": "description", "optional": true},
+            {"type": "Divider", "optional": true}
+          ]
+        }
+      ]
+    },
+    "complexity": "medium",
+    "best_for": ["chronological_data", "history", "activity_feeds", "logs"],
+    "avoid_when": ["non_temporal", "comparison", "metrics"]
+  },
+  {
+    "pattern_id": "split_view_detail",
+    "pattern_name": "Split View Master-Detail Pattern",
+    "description": "Two-column layout with master list on left and detail view on right. Common in email clients, file browsers, and record navigation.",
+    "use_cases": [
+      "email client layout",
+      "file browser",
+      "record navigation",
+      "master-detail view",
+      "list with preview",
+      "inbox style layout"
+    ],
+    "components": {
+      "container": "Stack",
+      "left_panel": "Stack",
+      "right_panel": "Card",
+      "primary_components": ["ListCard", "Heading", "Text"],
+      "supporting_components": ["Badge", "Button", "Avatar", "Divider"],
+      "layout_direction": "horizontal"
+    },
+    "data_requirements": {
+      "min_fields": ["items"],
+      "recommended_fields": ["items", "selected_item_details"],
+      "data_shape": "object",
+      "ideal_record_count": "varies",
+      "data_types": {
+        "items": "array",
+        "selected_item": "object"
+      }
+    },
+    "schema_structure": {
+      "type": "Stack",
+      "props": {"direction": "horizontal", "gap": "medium"},
+      "children": [
+        {
+          "type": "Stack",
+          "props": {"direction": "vertical", "width": "30%"},
+          "children": [
+            {
+              "type": "ListCard",
+              "repeat": "items",
+              "binds_to": "items"
+            }
+          ]
+        },
+        {
+          "type": "Card",
+          "props": {"variant": "outlined", "width": "70%"},
+          "children": [
+            {"type": "Heading", "binds_to": "selected_item.title"},
+            {"type": "Text", "binds_to": "selected_item.content"}
+          ]
+        }
+      ]
+    },
+    "complexity": "high",
+    "best_for": ["navigation", "master_detail", "browsing", "email_style"],
+    "avoid_when": ["mobile_view", "simple_lists", "single_focus"]
+  },
+  {
+    "pattern_id": "empty_state",
+    "pattern_name": "Empty State Pattern",
+    "description": "Placeholder view when no data is available. Provides guidance and actions for users to take when facing empty content.",
+    "use_cases": [
+      "no results found",
+      "empty list view",
+      "first-time user",
+      "no data available",
+      "zero state",
+      "onboarding prompt"
+    ],
+    "components": {
+      "container": "Card",
+      "primary_components": ["Heading", "Text", "Button"],
+      "supporting_components": ["Image"],
+      "layout_direction": "vertical"
+    },
+    "data_requirements": {
+      "min_fields": [],
+      "recommended_fields": ["message", "action_text", "image_url"],
+      "data_shape": "object|null",
+      "ideal_record_count": "0",
+      "data_types": {
+        "message": "string",
+        "action_text": "string"
+      }
+    },
+    "schema_structure": {
+      "type": "Card",
+      "props": {"variant": "outlined", "padding": "xlarge", "align": "center"},
+      "children": [
+        {"type": "Image", "value": {"src": "empty_state.svg"}, "optional": true},
+        {"type": "Heading", "value": {"text": "No data available"}, "level": 3},
+        {"type": "Text", "value": {"text": "Get started by adding your first item"}},
+        {"type": "Button", "value": {"text": "Add New"}}
+      ]
+    },
+    "complexity": "low",
+    "best_for": ["no_data", "onboarding", "zero_state", "guidance"],
+    "avoid_when": ["has_data", "loading_state"]
+  },
+  {
+    "pattern_id": "header_with_actions",
+    "pattern_name": "Page Header with Actions Pattern",
+    "description": "Page header with title, description, and action buttons. Common pattern for page tops with primary and secondary actions.",
+    "use_cases": [
+      "page header",
+      "section header with actions",
+      "toolbar pattern",
+      "title bar with controls",
+      "header with CTA"
+    ],
+    "components": {
+      "container": "Stack",
+      "primary_components": ["Heading", "Button"],
+      "supporting_components": ["Text", "Badge", "Divider"],
+      "layout_direction": "horizontal"
+    },
+    "data_requirements": {
+      "min_fields": ["title"],
+      "recommended_fields": ["title", "description", "actions"],
+      "data_shape": "object",
+      "ideal_record_count": "1",
+      "data_types": {
+        "title": "string",
+        "description": "string",
+        "actions": "array"
+      }
+    },
+    "schema_structure": {
+      "type": "Stack",
+      "props": {"direction": "horizontal", "justify": "space-between", "align": "center"},
+      "children": [
+        {
+          "type": "Stack",
+          "props": {"direction": "vertical", "gap": "xsmall"},
+          "children": [
+            {"type": "Heading", "binds_to": "title", "level": 1},
+            {"type": "Text", "binds_to": "description", "optional": true}
+          ]
+        },
+        {
+          "type": "Stack",
+          "props": {"direction": "horizontal", "gap": "small"},
+          "children": [
+            {
+              "type": "Button",
+              "repeat": "actions",
+              "binds_to": "actions"
+            }
+          ]
+        }
+      ]
+    },
+    "complexity": "low",
+    "best_for": ["page_headers", "section_headers", "toolbars"],
+    "avoid_when": ["content_area", "data_display"]
+  }
+]

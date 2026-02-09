@@ -1,0 +1,53 @@
+{
+  "pattern_id": "user_avatar_list",
+  "pattern_name": "User Avatar List Pattern",
+  "description": "Display a list of people/users with avatars, names, and metadata. Perfect for contact lists, team members, or lead lists where visual identification is important.",
+  "use_cases": [
+    "contact list with photos",
+    "team member directory",
+    "lead list with avatars",
+    "user selection dropdown",
+    "recipient picker",
+    "sales team roster",
+    "customer list view"
+  ],
+  "components": {
+    "container": "Stack",
+    "item_wrapper": "ListCard",
+    "required_components": ["Avatar", "Heading"],
+    "optional_components": ["Text", "Badge", "Button", "Link"],
+    "layout_direction": "vertical"
+  },
+  "data_requirements": {
+    "min_fields": ["name"],
+    "recommended_fields": ["avatar_url", "role", "status", "company"],
+    "data_shape": "array",
+    "ideal_record_count": "3-100",
+    "data_types": {
+      "name": "string",
+      "avatar_url": "url|null",
+      "status": "enum",
+      "role": "string"
+    }
+  },
+  "schema_structure": {
+    "type": "Stack",
+    "props": {"direction": "vertical", "gap": "small"},
+    "children": [
+      {
+        "type": "ListCard",
+        "repeat": "data",
+        "children": [
+          {"type": "Avatar", "binds_to": "avatar_url", "fallback": "initials"},
+          {"type": "Heading", "binds_to": "name", "level": 3},
+          {"type": "Text", "binds_to": "role", "optional": true},
+          {"type": "Badge", "binds_to": "status", "optional": true}
+        ]
+      }
+    ]
+  },
+  "complexity": "medium",
+  "best_for": ["people_lists", "contact_management", "team_views", "user_directories"],
+  "avoid_when": ["data_heavy_comparisons", "metrics_focus", "single_record_detail"]
+}
+

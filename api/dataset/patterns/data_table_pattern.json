@@ -1,0 +1,54 @@
+{
+  "pattern_id": "data_table_pattern",
+  "pattern_name": "Data Table Pattern",
+  "description": "Structured table layout for comparing multiple records with similar attributes. Ideal for data-heavy views where users need to scan, sort, and compare values across rows.",
+  "use_cases": [
+    "lead comparison table",
+    "opportunity pipeline view",
+    "account listing with metrics",
+    "transaction history",
+    "inventory list",
+    "report data view",
+    "multi-column comparison"
+  ],
+  "components": {
+    "container": "Card",
+    "primary_component": "Table",
+    "supporting_components": ["Heading", "Badge", "Button", "Metric"],
+    "layout_direction": "vertical"
+  },
+  "data_requirements": {
+    "min_fields": ["id"],
+    "recommended_fields": ["name", "status", "value", "date"],
+    "data_shape": "array",
+    "ideal_record_count": "5-1000",
+    "data_types": {
+      "id": "string|number",
+      "name": "string",
+      "status": "enum",
+      "value": "number|currency",
+      "date": "date"
+    }
+  },
+  "schema_structure": {
+    "type": "Card",
+    "props": {"variant": "outlined", "padding": "medium"},
+    "children": [
+      {"type": "Heading", "value": {"text": "{{title}}"}, "level": 2},
+      {
+        "type": "Table",
+        "props": {
+          "columns": "{{columns}}",
+          "sortable": true,
+          "filterable": true,
+          "paginated": true
+        },
+        "binds_to": "data"
+      }
+    ]
+  },
+  "complexity": "medium",
+  "best_for": ["data_comparison", "many_attributes", "sorting_filtering", "large_datasets"],
+  "avoid_when": ["single_record", "image_heavy", "hierarchical_data", "less_than_3_records"]
+}
+

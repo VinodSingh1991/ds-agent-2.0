@@ -1,0 +1,61 @@
+{
+  "pattern_id": "detail_view_card",
+  "pattern_name": "Detail View Card Pattern",
+  "description": "Comprehensive single-record view with all details organized in sections. Perfect for viewing complete information about a lead, contact, or opportunity.",
+  "use_cases": [
+    "lead detail page",
+    "contact profile view",
+    "opportunity details",
+    "account overview",
+    "product detail page",
+    "case details",
+    "record full view"
+  ],
+  "components": {
+    "container": "Card",
+    "sections": "Stack",
+    "primary_components": ["Heading", "Text", "Label", "Badge"],
+    "supporting_components": ["Avatar", "Button", "Link", "Divider", "Image"],
+    "layout_direction": "vertical"
+  },
+  "data_requirements": {
+    "min_fields": ["name"],
+    "recommended_fields": ["name", "status", "owner", "created_date", "description"],
+    "data_shape": "object",
+    "ideal_record_count": "1",
+    "data_types": {
+      "name": "string",
+      "status": "enum",
+      "description": "text",
+      "owner": "string",
+      "created_date": "date"
+    }
+  },
+  "schema_structure": {
+    "type": "Card",
+    "props": {"variant": "elevated", "padding": "large"},
+    "children": [
+      {
+        "type": "Stack",
+        "props": {"direction": "vertical", "gap": "medium"},
+        "children": [
+          {"type": "Heading", "binds_to": "name", "level": 1},
+          {"type": "Badge", "binds_to": "status"},
+          {"type": "Divider"},
+          {
+            "type": "Stack",
+            "props": {"direction": "vertical", "gap": "small"},
+            "children": [
+              {"type": "Label", "value": {"text": "Owner"}},
+              {"type": "Text", "binds_to": "owner"}
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "complexity": "medium",
+  "best_for": ["single_record", "detailed_information", "profile_views", "comprehensive_data"],
+  "avoid_when": ["multiple_records", "comparison_needed", "list_view"]
+}
+

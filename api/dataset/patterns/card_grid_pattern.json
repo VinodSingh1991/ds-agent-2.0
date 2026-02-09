@@ -1,0 +1,54 @@
+{
+  "pattern_id": "card_grid_pattern",
+  "pattern_name": "Card Grid Pattern",
+  "description": "Grid layout of cards displaying records with images or icons. Perfect for product catalogs, portfolio views, or visual-first content.",
+  "use_cases": [
+    "product catalog",
+    "account grid view",
+    "opportunity cards",
+    "portfolio display",
+    "image gallery with metadata",
+    "visual directory",
+    "tile-based navigation"
+  ],
+  "components": {
+    "container": "Stack",
+    "item_wrapper": "Card",
+    "primary_components": ["Image", "Heading", "Text"],
+    "supporting_components": ["Badge", "Button", "Metric", "Avatar"],
+    "layout_direction": "horizontal-wrap"
+  },
+  "data_requirements": {
+    "min_fields": ["title"],
+    "recommended_fields": ["title", "image_url", "description", "status"],
+    "data_shape": "array",
+    "ideal_record_count": "3-50",
+    "data_types": {
+      "title": "string",
+      "image_url": "url|null",
+      "description": "string",
+      "status": "enum"
+    }
+  },
+  "schema_structure": {
+    "type": "Stack",
+    "props": {"direction": "horizontal", "gap": "medium", "wrap": true},
+    "children": [
+      {
+        "type": "Card",
+        "repeat": "data",
+        "props": {"variant": "elevated", "width": "250px"},
+        "children": [
+          {"type": "Image", "binds_to": "image_url", "optional": true},
+          {"type": "Heading", "binds_to": "title", "level": 3},
+          {"type": "Text", "binds_to": "description", "optional": true},
+          {"type": "Badge", "binds_to": "status", "optional": true}
+        ]
+      }
+    ]
+  },
+  "complexity": "medium",
+  "best_for": ["visual_content", "grid_layout", "image_heavy", "browsing"],
+  "avoid_when": ["text_heavy", "data_comparison", "many_attributes"]
+}
+

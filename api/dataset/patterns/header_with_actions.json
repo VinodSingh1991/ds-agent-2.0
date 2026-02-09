@@ -1,0 +1,58 @@
+{
+  "pattern_id": "header_with_actions",
+  "pattern_name": "Page Header with Actions Pattern",
+  "description": "Page header with title, description, and action buttons. Common pattern for page tops with primary and secondary actions.",
+  "use_cases": [
+    "page header",
+    "section header with actions",
+    "toolbar pattern",
+    "title bar with controls",
+    "header with CTA"
+  ],
+  "components": {
+    "container": "Stack",
+    "primary_components": ["Heading", "Button"],
+    "supporting_components": ["Text", "Badge", "Divider"],
+    "layout_direction": "horizontal"
+  },
+  "data_requirements": {
+    "min_fields": ["title"],
+    "recommended_fields": ["title", "description", "actions"],
+    "data_shape": "object",
+    "ideal_record_count": "1",
+    "data_types": {
+      "title": "string",
+      "description": "string",
+      "actions": "array"
+    }
+  },
+  "schema_structure": {
+    "type": "Stack",
+    "props": {"direction": "horizontal", "justify": "space-between", "align": "center"},
+    "children": [
+      {
+        "type": "Stack",
+        "props": {"direction": "vertical", "gap": "xsmall"},
+        "children": [
+          {"type": "Heading", "binds_to": "title", "level": 1},
+          {"type": "Text", "binds_to": "description", "optional": true}
+        ]
+      },
+      {
+        "type": "Stack",
+        "props": {"direction": "horizontal", "gap": "small"},
+        "children": [
+          {
+            "type": "Button",
+            "repeat": "actions",
+            "binds_to": "actions"
+          }
+        ]
+      }
+    ]
+  },
+  "complexity": "low",
+  "best_for": ["page_headers", "section_headers", "toolbars"],
+  "avoid_when": ["content_area", "data_display"]
+}
+

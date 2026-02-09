@@ -1,0 +1,83 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug API Server",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "uvicorn",
+            "args": [
+                "api.main:app",
+                "--host", "0.0.0.0",
+                "--port", "8000",
+                "--reload"
+            ],
+            "cwd": "${workspaceFolder}/api",
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}/api"
+            },
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "autoReload": {
+                "enable": true
+            }
+        },
+        {
+            "name": "Debug API Server (No Reload)",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "uvicorn",
+            "args": [
+                "api.main:app",
+                "--host", "0.0.0.0",
+                "--port", "8000"
+            ],
+            "cwd": "${workspaceFolder}/api",
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}/api"
+            },
+            "console": "integratedTerminal",
+            "justMyCode": false
+        },
+        {
+            "name": "Debug start_api.py",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/api/start_api.py",
+            "args": [
+                "--reload"
+            ],
+            "cwd": "${workspaceFolder}/api",
+            "console": "integratedTerminal",
+            "justMyCode": false
+        },
+        {
+            "name": "Debug Test Script",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${file}",
+            "cwd": "${workspaceFolder}/api",
+            "console": "integratedTerminal",
+            "justMyCode": true
+        },
+        {
+            "name": "Debug Build Vector Index",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/api/build_vector_index.py",
+            "cwd": "${workspaceFolder}/api",
+            "console": "integratedTerminal",
+            "justMyCode": false
+        },
+        {
+            "name": "Debug Generate Chunks",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/api/generate_chunks.py",
+            "cwd": "${workspaceFolder}/api",
+            "console": "integratedTerminal",
+            "justMyCode": false
+        }
+    ]
+}
+
