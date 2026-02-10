@@ -32,7 +32,7 @@ else:
 # Add parent directory to path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from agent.structured_ui_agent_v2 import StructuredUIAgent
+from agent.langgraph_ui_agent import LangGraphUIAgent
 from core.enhanced_vector_store import EnhancedVectorStore
 from loguru import logger
 
@@ -42,8 +42,8 @@ logger.add("logs/api.log", rotation="10 MB")
 # Initialize FastAPI app
 app = FastAPI(
     title="Disposable UI Agent API",
-    description="Generate UI layouts from natural language queries",
-    version="1.0.0"
+    description="Generate UI layouts from natural language queries using LangGraph orchestration",
+    version="2.0.0"
 )
 
 # Add CORS middleware
@@ -59,15 +59,15 @@ app.add_middleware(
 agent = None
 
 
-def get_agent() -> StructuredUIAgent:
+def get_agent() -> LangGraphUIAgent:
     """Get or create agent instance"""
     global agent
     if agent is None:
         # Get model from environment variable or use default
         model = os.getenv("OPENAI_MODEL", "gpt-4o-mini")
-        logger.info(f"Initializing StructuredUIAgent with model: {model}...")
-        agent = StructuredUIAgent(model=model)
-        logger.info("Agent initialized successfully")
+        logger.info(f"Initializing LangGraphUIAgent with model: {model}...")
+        agent = LangGraphUIAgent(model=model)
+        logger.info("LangGraph Agent initialized successfully")
     return agent
 
 
@@ -129,8 +129,9 @@ class HealthResponse(BaseModel):
 async def root():
     """Root endpoint"""
     return {
-        "message": "Disposable UI Agent API",
-        "version": "1.0.0",
+        "message": "Disposable UI Agent API (LangGraph)",
+        "version": "2.0.0",
+        "orchestration": "LangGraph",
         "endpoints": {
             "generate": "/generate",
             "batch": "/generate-batch",
@@ -146,7 +147,7 @@ async def health_check():
     return {
         "status": "healthy",
         "agent_initialized": agent is not None,
-        "version": "1.0.0"
+        "version": "2.0.0"
     }
 
 
