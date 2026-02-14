@@ -87,118 +87,81 @@ class ChunkGenerator:
     
     def generate_query_layout_chunks(self) -> List[Chunk]:
         """
-        Generate query-layout pair chunks from example queries
-        
-        These are hand-crafted examples showing how queries map to layouts
+        Generate query-layout pair chunks from query_patterns.json
+
+        Loads comprehensive CRM query-to-pattern mappings from JSON file
         """
-        examples = [
-            {
-                "query": "show me all leads",
-                "analysis": {
-                    "object_type": "lead",
-                    "intent": "view_list",
-                    "layout_type": "list",
-                    "filters": [],
-                    "sort": None,
-                    "limit": None
-                },
-                "layout": {"type": "simple_list"}
-            },
-            {
-                "query": "show me top 5 leads with revenue > 50k",
-                "analysis": {
-                    "object_type": "lead",
-                    "intent": "view_list",
-                    "layout_type": "list",
-                    "filters": [{"field": "revenue", "operator": ">", "value": 50000}],
-                    "sort": "revenue DESC",
-                    "limit": 5
-                },
-                "layout": {"type": "filtered_list_with_metrics"}
-            },
-            {
-                "query": "display contact details for John Doe",
-                "analysis": {
-                    "object_type": "contact",
-                    "intent": "view_detail",
-                    "layout_type": "detail",
-                    "filters": [{"field": "name", "operator": "=", "value": "John Doe"}],
-                    "sort": None,
-                    "limit": 1
-                },
-                "layout": {"type": "detail_view"}
-            },
-            {
-                "query": "sales dashboard with metrics",
-                "analysis": {
-                    "object_type": "opportunity",
-                    "intent": "view_dashboard",
-                    "layout_type": "dashboard",
-                    "filters": [],
-                    "sort": None,
-                    "limit": None
-                },
-                "layout": {"type": "metric_dashboard"}
-            },
-            {
-                "query": "list all contacts with photos",
-                "analysis": {
-                    "object_type": "contact",
-                    "intent": "view_list",
-                    "layout_type": "list",
-                    "filters": [],
-                    "sort": None,
-                    "limit": None
-                },
-                "layout": {"type": "user_avatar_list"}
-            }
-        ]
-        
+        query_patterns_path = self.patterns_dir.parent / "query_patterns.json"
+
+        if not query_patterns_path.exists():
+            logger.warning(f"Query patterns file not found: {query_patterns_path}")
+            logger.info("Using fallback hardcoded examples")
+            # Fallback to minimal examples if file doesn't exist
+            examples = [
+                {
+                    "query": "show me all leads",
+                    "pattern_id": "data_table_pattern",
+                    "analysis": {"object_type": "lead", "intent": "view_list", "layout_type": "list"}
+                }
+            ]
+        else:
+            try:
+                with open(query_patterns_path, 'r', encoding='utf-8') as f:
+                    data = json.load(f)
+                examples = data.get("query_patterns", [])
+                logger.info(f"Loaded {len(examples)} query patterns from {query_patterns_path.name}")
+            except Exception as e:
+                logger.error(f"Error loading query patterns: {e}")
+                examples = []
+
         chunks = []
         for example in examples:
             try:
                 chunk = self.builder.build_query_layout_chunk(
                     query=example["query"],
-                    layout=example["layout"],
-                    analysis=example["analysis"]
+                    layout={"type": example.get("pattern_id", "unknown")},
+                    analysis=example.get("analysis", {})
                 )
                 chunks.append(chunk)
                 logger.debug(f"Generated query-layout chunk: {chunk.chunk_id}")
             except Exception as e:
-                logger.error(f"Error generating query-layout chunk: {e}")
-        
+                logger.error(f"Error generating query-layout chunk for '{example.get('query', 'unknown')}': {e}")
+
         logger.info(f"Generated {len(chunks)} query-layout chunks")
         return chunks
     
     def generate_component_doc_chunks(self) -> List[Chunk]:
-        """Generate component documentation chunks"""
-        component_docs = [
-            {
-                "component_type": "Metric",
-                "description": "Display numeric values with formatting",
-                "category": "data_display",
-                "use_for": ["numbers", "currency", "percentages", "KPIs", "statistics"],
-                "data_types": ["number", "currency", "percentage"],
-                "common_bindings": ["revenue", "count", "amount", "total", "average", "price"]
-            },
-            {
-                "component_type": "Badge",
-                "description": "Display status or category labels",
-                "category": "data_display",
-                "use_for": ["status", "categories", "tags", "labels"],
-                "data_types": ["enum", "string"],
-                "common_bindings": ["status", "category", "type", "priority", "stage"]
-            },
-            {
-                "component_type": "Avatar",
-                "description": "Display user photos or initials",
-                "category": "media",
-                "use_for": ["user photos", "profile pictures", "contact images"],
-                "data_types": ["url", "string"],
-                "common_bindings": ["avatar_url", "photo", "image", "picture"]
-            }
-        ]
-        
+        """
+        Generate component documentation chunks from component_patterns.json
+
+        Loads comprehensive component documentation from JSON file
+        """
+        component_patterns_path = self.patterns_dir.parent / "component_patterns.json"
+
+        if not component_patterns_path.exists():
+            logger.warning(f"Component patterns file not found: {component_patterns_path}")
+            logger.info("Using fallback hardcoded component docs")
+            # Fallback to minimal docs if file doesn't exist
+            component_docs = [
+                {
+                    "component_type": "Badge",
+                    "description": "Display status or category labels",
+                    "category": "feedback",
+                    "use_for": ["status", "categories", "tags"],
+                    "data_types": ["enum", "string"],
+                    "common_bindings": ["status", "category", "type"]
+                }
+            ]
+        else:
+            try:
+                with open(component_patterns_path, 'r', encoding='utf-8') as f:
+                    data = json.load(f)
+                component_docs = data.get("component_patterns", [])
+                logger.info(f"Loaded {len(component_docs)} component patterns from {component_patterns_path.name}")
+            except Exception as e:
+                logger.error(f"Error loading component patterns: {e}")
+                component_docs = []
+
         chunks = []
         for doc in component_docs:
             try:
@@ -208,8 +171,8 @@ class ChunkGenerator:
                 )
                 chunks.append(chunk)
             except Exception as e:
-                logger.error(f"Error generating component doc chunk: {e}")
-        
+                logger.error(f"Error generating component doc chunk for '{doc.get('component_type', 'unknown')}': {e}")
+
         logger.info(f"Generated {len(chunks)} component doc chunks")
         return chunks
 

@@ -3,13 +3,27 @@
   "pattern_name": "Profile Card List Pattern",
   "description": "Display a list or grid of profile cards with detailed user/contact information. Each card shows avatar, name, role, contact details, and status. Perfect for team directories, contact lists, and user management.",
   "use_cases": [
-    "team member directory",
-    "contact management",
-    "user directory",
-    "sales team roster",
+    "sales team directory",
+    "contact profiles grid",
+    "lead profiles with details",
+    "account contacts",
     "customer profiles",
+    "opportunity stakeholders",
+    "territory reps",
+    "deal team members",
+    "support team roster",
+    "partner contacts"
+  ],
+  "crm_queries": [
+    "show team directory",
+    "contact profiles",
     "lead profiles",
-    "employee directory"
+    "account contacts",
+    "customer profiles",
+    "stakeholders",
+    "sales reps",
+    "deal team",
+    "support team"
   ],
   "components": {
     "container": "Grid",

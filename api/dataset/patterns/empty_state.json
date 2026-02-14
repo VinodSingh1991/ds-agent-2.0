@@ -3,12 +3,24 @@
   "pattern_name": "Empty State Pattern",
   "description": "Placeholder view when no data is available. Provides guidance and actions for users to take when facing empty content.",
   "use_cases": [
-    "no results found",
-    "empty list view",
-    "first-time user",
-    "no data available",
+    "no leads found",
+    "empty opportunities list",
+    "no contacts yet",
+    "no search results",
+    "empty pipeline",
+    "first-time CRM user",
+    "no activities logged",
+    "empty dashboard",
+    "no deals in stage",
+    "zero state onboarding"
+  ],
+  "crm_queries": [
+    "no results",
+    "empty state",
+    "no data",
     "zero state",
-    "onboarding prompt"
+    "nothing found",
+    "empty list"
   ],
   "components": {
     "container": "Card",

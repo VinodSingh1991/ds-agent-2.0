@@ -3,12 +3,23 @@
   "pattern_name": "Birthday/Celebration Card Pattern",
   "description": "Special celebratory card for birthdays, anniversaries, or special events. Features festive styling and personalization.",
   "use_cases": [
-    "employee birthdays",
+    "contact birthdays",
+    "customer anniversaries",
+    "deal won celebrations",
+    "quota achievement",
     "work anniversaries",
     "milestone celebrations",
-    "special events",
-    "recognition cards",
-    "team celebrations"
+    "team member birthdays",
+    "partnership anniversaries",
+    "account milestones"
+  ],
+  "crm_queries": [
+    "birthday",
+    "anniversary",
+    "celebration",
+    "milestone",
+    "achievement",
+    "special event"
   ],
   "components": {
     "container": "Card",

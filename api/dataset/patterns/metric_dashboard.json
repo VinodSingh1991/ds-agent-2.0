@@ -3,13 +3,28 @@
   "pattern_name": "Metric Dashboard Pattern",
   "description": "Display key performance indicators and metrics in a scannable dashboard layout. Perfect for executive summaries, KPI tracking, and performance monitoring.",
   "use_cases": [
-    "sales dashboard",
-    "performance metrics overview",
-    "KPI summary",
-    "executive dashboard",
-    "analytics snapshot",
-    "team performance view",
-    "monthly summary"
+    "sales metrics dashboard",
+    "revenue KPIs",
+    "pipeline metrics",
+    "conversion rate tracking",
+    "quota attainment view",
+    "win rate metrics",
+    "activity metrics",
+    "forecast accuracy",
+    "team performance KPIs",
+    "monthly sales summary"
+  ],
+  "crm_queries": [
+    "show metrics",
+    "display KPIs",
+    "sales performance",
+    "revenue metrics",
+    "pipeline stats",
+    "conversion rates",
+    "quota tracking",
+    "win rates",
+    "activity stats",
+    "performance summary"
   ],
   "components": {
     "container": "Stack",

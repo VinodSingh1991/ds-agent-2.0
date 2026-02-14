@@ -3,14 +3,27 @@
   "pattern_name": "Callout Notification Pattern",
   "description": "Display important messages, notifications, tips, or alerts using Callout components. Supports multiple variants (info, success, warning, error, tip, note) with icons and dismissible options.",
   "use_cases": [
-    "important notices",
-    "system notifications",
-    "tips and hints",
-    "warnings and errors",
-    "feature highlights",
-    "onboarding messages",
-    "status updates",
-    "promotional messages"
+    "lead assignment notifications",
+    "deal won alerts",
+    "quota achievement messages",
+    "task reminders",
+    "follow-up notifications",
+    "system alerts",
+    "data validation warnings",
+    "success confirmations",
+    "feature tips",
+    "onboarding guidance"
+  ],
+  "crm_queries": [
+    "show notification",
+    "display alert",
+    "show message",
+    "callout",
+    "warning",
+    "success message",
+    "error message",
+    "tip",
+    "notice"
   ],
   "components": {
     "container": "Stack",

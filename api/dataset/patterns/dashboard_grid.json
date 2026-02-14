@@ -3,13 +3,28 @@
   "pattern_name": "Dashboard Grid Pattern",
   "description": "Flexible dashboard layout with Grid component supporting multiple Dashlets and charts. Perfect for KPI dashboards with 4-3-3-chart layouts or any custom grid configuration.",
   "use_cases": [
-    "sales dashboard",
+    "sales performance dashboard",
+    "executive CRM dashboard",
+    "pipeline metrics overview",
+    "revenue KPI dashboard",
+    "team quota tracking",
+    "monthly sales summary",
+    "lead conversion dashboard",
+    "opportunity win rate dashboard",
+    "activity metrics dashboard",
+    "forecast vs actual dashboard"
+  ],
+  "crm_queries": [
+    "show sales dashboard",
+    "display KPIs",
     "executive dashboard",
-    "performance metrics overview",
-    "KPI summary with charts",
-    "analytics dashboard",
-    "team performance view",
-    "monthly summary dashboard"
+    "pipeline metrics",
+    "revenue dashboard",
+    "team performance",
+    "quota tracking",
+    "conversion metrics",
+    "win rate dashboard",
+    "forecast dashboard"
   ],
   "components": {
     "container": "Stack",

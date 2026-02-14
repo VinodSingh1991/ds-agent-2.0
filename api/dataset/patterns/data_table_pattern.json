@@ -3,13 +3,28 @@
   "pattern_name": "Data Table Pattern",
   "description": "Structured table layout for comparing multiple records with similar attributes. Ideal for data-heavy views where users need to scan, sort, and compare values across rows.",
   "use_cases": [
-    "lead comparison table",
-    "opportunity pipeline view",
-    "account listing with metrics",
-    "transaction history",
-    "inventory list",
-    "report data view",
-    "multi-column comparison"
+    "leads table with status and score",
+    "opportunities pipeline table",
+    "accounts list with revenue",
+    "deals comparison table",
+    "activity history table",
+    "sales forecast table",
+    "contact list with details",
+    "task list with priorities",
+    "quote comparison table",
+    "campaign performance table"
+  ],
+  "crm_queries": [
+    "show leads table",
+    "display opportunities",
+    "list all accounts",
+    "show deals pipeline",
+    "activity history",
+    "sales forecast",
+    "contact table",
+    "task list",
+    "compare quotes",
+    "campaign results table"
   ],
   "components": {
     "container": "Card",

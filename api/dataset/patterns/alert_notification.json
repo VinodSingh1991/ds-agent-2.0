@@ -3,13 +3,26 @@
   "pattern_name": "Alert/Notification Pattern",
   "description": "Display important messages, alerts, warnings, or success notifications to users. Supports different severity levels with appropriate visual styling.",
   "use_cases": [
-    "error messages",
-    "success confirmations",
-    "warning alerts",
-    "info notifications",
-    "system messages",
-    "banner alerts",
-    "inline notifications"
+    "lead assignment notification",
+    "deal won/lost alerts",
+    "task deadline warnings",
+    "quota achievement success",
+    "duplicate record warnings",
+    "email sync errors",
+    "pipeline stage change alerts",
+    "follow-up reminders",
+    "SLA breach warnings",
+    "approval request notifications"
+  ],
+  "crm_queries": [
+    "show notification",
+    "display alert",
+    "show warning message",
+    "success message",
+    "error notification",
+    "show deal won alert",
+    "task reminder",
+    "quota alert"
   ],
   "components": {
     "container": "Alert",

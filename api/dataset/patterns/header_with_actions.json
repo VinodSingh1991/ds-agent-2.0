@@ -3,11 +3,22 @@
   "pattern_name": "Page Header with Actions Pattern",
   "description": "Page header with title, description, and action buttons. Common pattern for page tops with primary and secondary actions.",
   "use_cases": [
+    "leads page header",
+    "opportunities page header",
+    "accounts page header",
+    "dashboard header with filters",
+    "report header with export",
+    "list view header with actions",
+    "detail page header with edit",
+    "pipeline view header",
+    "campaign header with actions"
+  ],
+  "crm_queries": [
     "page header",
-    "section header with actions",
-    "toolbar pattern",
-    "title bar with controls",
-    "header with CTA"
+    "header with actions",
+    "title with buttons",
+    "page toolbar",
+    "header with filters"
   ],
   "components": {
     "container": "Stack",

@@ -3,12 +3,26 @@
   "pattern_name": "Timeline/Activity List Pattern",
   "description": "Chronological list of activities or events with timestamps. Perfect for activity feeds, history logs, and timeline views.",
   "use_cases": [
-    "activity history",
-    "change log",
-    "timeline view",
-    "event history",
+    "lead activity history",
+    "deal timeline",
+    "contact interaction log",
+    "opportunity change log",
+    "email communication history",
+    "call log timeline",
+    "task completion history",
+    "case update timeline",
     "audit trail",
+    "status change history"
+  ],
+  "crm_queries": [
+    "show activity history",
+    "timeline",
+    "interaction log",
+    "change history",
     "communication log",
+    "call history",
+    "task history",
+    "audit trail",
     "status changes"
   ],
   "components": {

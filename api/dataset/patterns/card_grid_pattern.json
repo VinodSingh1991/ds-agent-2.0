@@ -3,13 +3,27 @@
   "pattern_name": "Card Grid Pattern",
   "description": "Grid layout of cards displaying records with images or icons. Perfect for product catalogs, portfolio views, or visual-first content.",
   "use_cases": [
-    "product catalog",
-    "account grid view",
+    "product catalog grid",
+    "account cards view",
+    "opportunity cards grid",
+    "deal cards with logos",
+    "customer portfolio",
+    "partner directory grid",
+    "campaign cards",
+    "case cards view",
+    "territory cards",
+    "project cards grid"
+  ],
+  "crm_queries": [
+    "show products grid",
+    "account cards",
     "opportunity cards",
-    "portfolio display",
-    "image gallery with metadata",
-    "visual directory",
-    "tile-based navigation"
+    "deal cards",
+    "customer portfolio",
+    "partner directory",
+    "campaign cards",
+    "case cards",
+    "grid view"
   ],
   "components": {
     "container": "Stack",

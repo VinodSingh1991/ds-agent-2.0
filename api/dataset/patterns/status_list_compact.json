@@ -3,13 +3,28 @@
   "pattern_name": "Status List Compact Pattern",
   "description": "Compact list view with status indicators and key information. Optimized for quick scanning of records with visual status cues.",
   "use_cases": [
-    "task list with status",
-    "notification list",
+    "task list with priorities",
+    "lead status overview",
+    "opportunity stages list",
     "activity feed",
-    "quick status overview",
-    "alert list",
-    "recent items view",
-    "compact notifications"
+    "follow-up tasks",
+    "recent activities",
+    "deal pipeline stages",
+    "case status list",
+    "email status tracking",
+    "call log with outcomes"
+  ],
+  "crm_queries": [
+    "show tasks",
+    "task list",
+    "lead status",
+    "opportunity stages",
+    "activity feed",
+    "follow-ups",
+    "recent activities",
+    "deal stages",
+    "case status",
+    "call log"
   ],
   "components": {
     "container": "Stack",

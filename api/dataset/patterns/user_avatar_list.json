@@ -3,13 +3,27 @@
   "pattern_name": "User Avatar List Pattern",
   "description": "Display a list of people/users with avatars, names, and metadata. Perfect for contact lists, team members, or lead lists where visual identification is important.",
   "use_cases": [
-    "contact list with photos",
-    "team member directory",
-    "lead list with avatars",
-    "user selection dropdown",
-    "recipient picker",
+    "lead list with contact photos",
     "sales team roster",
-    "customer list view"
+    "account contacts directory",
+    "opportunity stakeholders",
+    "customer list view",
+    "assigned users picker",
+    "meeting attendees list",
+    "deal team members",
+    "contact selection for email",
+    "territory sales reps"
+  ],
+  "crm_queries": [
+    "show all leads",
+    "list contacts",
+    "display team members",
+    "show sales reps",
+    "list account contacts",
+    "show opportunity stakeholders",
+    "display customers",
+    "show assigned users",
+    "list deal team"
   ],
   "components": {
     "container": "Stack",

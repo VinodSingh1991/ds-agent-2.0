@@ -5,11 +5,25 @@
   "use_cases": [
     "lead detail page",
     "contact profile view",
+    "opportunity full details",
+    "account overview page",
+    "deal details view",
+    "case record details",
+    "customer profile",
+    "quote details page",
+    "campaign details",
+    "product record view"
+  ],
+  "crm_queries": [
+    "show lead details",
+    "contact profile",
     "opportunity details",
     "account overview",
-    "product detail page",
+    "deal information",
     "case details",
-    "record full view"
+    "customer profile",
+    "quote details",
+    "view record"
   ],
   "components": {
     "container": "Card",
