@@ -1,6 +1,6 @@
 {
   "pattern_id": "data_table_pattern",
-  "pattern_name": "Data Table Pattern",
+  "pattern_name": "Table Layout",
   "description": "Structured table layout for comparing multiple records with similar attributes. Ideal for data-heavy views where users need to scan, sort, and compare values across rows.",
   "use_cases": [
     "leads table with status and score",
@@ -26,44 +26,57 @@
     "compare quotes",
     "campaign results table"
   ],
-  "components": {
-    "container": "Card",
-    "primary_component": "Table",
-    "supporting_components": ["Heading", "Badge", "Button", "Metric"],
-    "layout_direction": "vertical"
-  },
-  "data_requirements": {
-    "min_fields": ["id"],
-    "recommended_fields": ["name", "status", "value", "date"],
-    "data_shape": "array",
-    "ideal_record_count": "5-1000",
-    "data_types": {
-      "id": "string|number",
-      "name": "string",
-      "status": "enum",
-      "value": "number|currency",
-      "date": "date"
-    }
-  },
   "schema_structure": {
-    "type": "Card",
-    "props": {"variant": "outlined", "padding": "medium"},
-    "children": [
-      {"type": "Heading", "value": {"text": "{{title}}"}, "level": 2},
+    "intent": "view_table",
+    "query": "{{query}}",
+    "id": "layout_data_table_pattern",
+    "object_type": "account",
+    "layout_type": "table",
+    "LLm_instructions": "Fill the summary and title fields. summary should contain the overall information about the table or the data it represents.",
+    "summary": "{{summary}}",
+    "sections": [
       {
-        "type": "Table",
-        "props": {
-          "columns": "{{columns}}",
-          "sortable": true,
-          "filterable": true,
-          "paginated": true
-        },
-        "binds_to": "data"
+        "id": "main_table",
+        "title": "{{title}}",
+        "description": "{{description}}",
+        "LLm_instructions": "Fill The {{title}} and {{description}} fields with appropriate title and description for the table layout. The title should be concise and descriptive, while the description should provide additional context about the data being displayed in the table.",
+        "rows": [
+          {
+            "type": "Stack",
+            "props": {
+              "direction": "vertical",
+              "gap": "medium",
+              "children": [
+                {
+                  "type": "Table",
+                  "props": {
+                    "columns": "{{columns}}",
+                    "data": "{{data}}",
+                    "sortable": true,
+                    "filterable": true,
+                    "paginated": true
+                  },
+                  "LLm_instructions": "Fill the columns and data fields. columns should be an array of column definitions, where each definition includes a header and a key that corresponds to the data. data should be an array of records, where each record is an object with keys that match the column definitions. Ensure that the data is structured correctly to populate the table layout effectively."
+                }
+              ]
+            }
+          }
+        ]
       }
     ]
   },
   "complexity": "medium",
-  "best_for": ["data_comparison", "many_attributes", "sorting_filtering", "large_datasets"],
-  "avoid_when": ["single_record", "image_heavy", "hierarchical_data", "less_than_3_records"]
+  "best_for": [
+    "data_comparison",
+    "many_attributes",
+    "sorting_filtering",
+    "large_datasets"
+  ],
+  "avoid_when": [
+    "single_record",
+    "image_heavy",
+    "hierarchical_data",
+    "less_than_3_records"
+  ],
+  "best_for_layout": "table"
 }
-

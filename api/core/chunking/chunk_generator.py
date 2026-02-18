@@ -130,94 +130,37 @@ class ChunkGenerator:
         logger.info(f"Generated {len(chunks)} query-layout chunks")
         return chunks
     
-    def generate_component_doc_chunks(self) -> List[Chunk]:
+    def generate_intent_mapping_chunks(self) -> List[Chunk]:
         """
-        Generate component documentation chunks from component_patterns.json
+        Generate intent-to-pattern mapping chunks from intent_mappings.json
 
-        Loads comprehensive component documentation from JSON file
+        Loads comprehensive intent mappings from JSON file
         """
-        component_patterns_path = self.patterns_dir.parent / "component_patterns.json"
+        intent_mappings_path = self.patterns_dir.parent / "intent_mappings.json"
 
-        if not component_patterns_path.exists():
-            logger.warning(f"Component patterns file not found: {component_patterns_path}")
-            logger.info("Using fallback hardcoded component docs")
-            # Fallback to minimal docs if file doesn't exist
-            component_docs = [
+        if not intent_mappings_path.exists():
+            logger.warning(f"Intent mappings file not found: {intent_mappings_path}")
+            logger.info("Using fallback hardcoded examples")
+            # Fallback to minimal examples if file doesn't exist
+            intent_mappings = [
                 {
-                    "component_type": "Badge",
-                    "description": "Display status or category labels",
-                    "category": "feedback",
-                    "use_for": ["status", "categories", "tags"],
-                    "data_types": ["enum", "string"],
-                    "common_bindings": ["status", "category", "type"]
+                    "intent": "view_list",
+                    "user_phrases": ["show me", "display", "list"],
+                    "indicators": {"has_filters": ["with", "where"]},
+                    "recommended_patterns": [
+                        {"pattern_id": "data_table_pattern", "when": "need to compare fields", "confidence": 0.85}
+                    ]
                 }
             ]
         else:
             try:
-                with open(component_patterns_path, 'r', encoding='utf-8') as f:
+                with open(intent_mappings_path, 'r', encoding='utf-8') as f:
                     data = json.load(f)
-                component_docs = data.get("component_patterns", [])
-                logger.info(f"Loaded {len(component_docs)} component patterns from {component_patterns_path.name}")
+                intent_mappings = data.get("intent_mappings", [])
+                logger.info(f"Loaded {len(intent_mappings)} intent mappings from {intent_mappings_path.name}")
             except Exception as e:
-                logger.error(f"Error loading component patterns: {e}")
-                component_docs = []
-
-        chunks = []
-        for doc in component_docs:
-            try:
-                chunk = self.builder.build_component_doc_chunk(
-                    component_type=doc["component_type"],
-                    documentation=doc
-                )
-                chunks.append(chunk)
-            except Exception as e:
-                logger.error(f"Error generating component doc chunk for '{doc.get('component_type', 'unknown')}': {e}")
-
-        logger.info(f"Generated {len(chunks)} component doc chunks")
-        return chunks
-
-    def generate_intent_mapping_chunks(self) -> List[Chunk]:
-        """Generate intent-to-pattern mapping chunks"""
-        intent_mappings = [
-            {
-                "intent": "view_list",
-                "user_phrases": ["show me", "display", "list", "get all", "find"],
-                "indicators": {
-                    "has_filters": ["with", "where", "that have", ">", "<", "="],
-                    "has_sorting": ["top", "best", "highest", "lowest", "sorted by"],
-                    "has_limit": ["top 5", "first 10", "limit"]
-                },
-                "recommended_patterns": [
-                    {"pattern_id": "user_avatar_list", "when": "data has images or people", "confidence": 0.9},
-                    {"pattern_id": "data_table_pattern", "when": "need to compare fields", "confidence": 0.85},
-                    {"pattern_id": "status_list_compact", "when": "focus on status", "confidence": 0.8}
-                ]
-            },
-            {
-                "intent": "view_detail",
-                "user_phrases": ["details for", "show", "view", "get info about"],
-                "indicators": {
-                    "single_record": ["details", "info", "about", "for"],
-                    "has_name": ["John", "specific name"]
-                },
-                "recommended_patterns": [
-                    {"pattern_id": "detail_view_card", "when": "single record", "confidence": 0.95},
-                    {"pattern_id": "profile_view", "when": "person/contact", "confidence": 0.9}
-                ]
-            },
-            {
-                "intent": "view_dashboard",
-                "user_phrases": ["dashboard", "metrics", "analytics", "overview", "summary"],
-                "indicators": {
-                    "has_metrics": ["metrics", "KPIs", "statistics", "numbers"],
-                    "has_aggregation": ["total", "average", "sum", "count"]
-                },
-                "recommended_patterns": [
-                    {"pattern_id": "metric_dashboard", "when": "multiple metrics", "confidence": 0.95},
-                    {"pattern_id": "analytics_view", "when": "charts and graphs", "confidence": 0.85}
-                ]
-            }
-        ]
+                logger.error(f"Error loading intent mappings: {e}")
+                intent_mappings = []
 
         chunks = []
         for mapping in intent_mappings:
@@ -228,80 +171,9 @@ class ChunkGenerator:
                 )
                 chunks.append(chunk)
             except Exception as e:
-                logger.error(f"Error generating intent mapping chunk: {e}")
+                logger.error(f"Error generating intent mapping chunk for '{mapping.get('intent', 'unknown')}': {e}")
 
         logger.info(f"Generated {len(chunks)} intent mapping chunks")
-        return chunks
-
-    def generate_data_shape_chunks(self) -> List[Chunk]:
-        """Generate data shape pattern chunks"""
-        data_shapes = [
-            {
-                "shape_id": "small_list_with_metrics",
-                "data_characteristics": {
-                    "record_count": {"min": 3, "max": 10},
-                    "has_numeric_fields": True,
-                    "has_images": False,
-                    "has_status_fields": True,
-                    "field_count": {"min": 3, "max": 8}
-                },
-                "recommended_layout_type": "list",
-                "recommended_components": ["ListCard", "Metric", "Badge", "Heading"],
-                "reasoning": "Small datasets with metrics work best in list format where each item can show detailed metrics."
-            },
-            {
-                "shape_id": "large_table_data",
-                "data_characteristics": {
-                    "record_count": {"min": 20, "max": 1000},
-                    "has_numeric_fields": True,
-                    "has_images": False,
-                    "has_status_fields": True,
-                    "field_count": {"min": 5, "max": 15}
-                },
-                "recommended_layout_type": "table",
-                "recommended_components": ["Table", "Badge", "Metric"],
-                "reasoning": "Large datasets need table format for comparison and scanning."
-            },
-            {
-                "shape_id": "single_record_detail",
-                "data_characteristics": {
-                    "record_count": {"min": 1, "max": 1},
-                    "has_numeric_fields": True,
-                    "has_images": True,
-                    "has_status_fields": True,
-                    "field_count": {"min": 5, "max": 20}
-                },
-                "recommended_layout_type": "detail",
-                "recommended_components": ["Card", "Heading", "Text", "Metric", "Badge", "Avatar"],
-                "reasoning": "Single record needs detail view with all fields organized in sections."
-            },
-            {
-                "shape_id": "people_list_with_photos",
-                "data_characteristics": {
-                    "record_count": {"min": 3, "max": 100},
-                    "has_numeric_fields": False,
-                    "has_images": True,
-                    "has_status_fields": True,
-                    "field_count": {"min": 3, "max": 8}
-                },
-                "recommended_layout_type": "list",
-                "recommended_components": ["Stack", "ListCard", "Avatar", "Heading", "Text", "Badge"],
-                "reasoning": "People/contacts with photos need avatar list for visual identification."
-            }
-        ]
-
-        chunks = []
-        for shape in data_shapes:
-            try:
-                chunk = self.builder.build_data_shape_chunk(
-                    shape_id=shape["shape_id"],
-                    shape_pattern=shape
-                )
-                chunks.append(chunk)
-            except Exception as e:
-                logger.error(f"Error generating data shape chunk: {e}")
-
-        logger.info(f"Generated {len(chunks)} data shape chunks")
         return chunks
 
     def generate_all_chunks(self) -> List[Chunk]:
@@ -324,24 +196,14 @@ class ChunkGenerator:
         query_chunks = self.generate_query_layout_chunks()
         all_chunks.extend(query_chunks)
 
-        # 3. Generate component documentation chunks
-        component_chunks = self.generate_component_doc_chunks()
-        all_chunks.extend(component_chunks)
-
-        # 4. Generate intent mapping chunks
+        # 3. Generate intent mapping chunks
         intent_chunks = self.generate_intent_mapping_chunks()
         all_chunks.extend(intent_chunks)
-
-        # 5. Generate data shape chunks
-        data_shape_chunks = self.generate_data_shape_chunks()
-        all_chunks.extend(data_shape_chunks)
 
         logger.info(f"Generated {len(all_chunks)} total chunks")
         logger.info(f"  - Pattern chunks: {len(pattern_chunks)}")
         logger.info(f"  - Query-layout chunks: {len(query_chunks)}")
-        logger.info(f"  - Component doc chunks: {len(component_chunks)}")
         logger.info(f"  - Intent mapping chunks: {len(intent_chunks)}")
-        logger.info(f"  - Data shape chunks: {len(data_shape_chunks)}")
 
         return all_chunks
 

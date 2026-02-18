@@ -1,0 +1,253 @@
+{
+  "generated_at": "2026-02-16",
+  "version": "1.0.0",
+  "description": "Intent-to-pattern mappings for RAG system. Maps user intents and phrases to recommended UI patterns.",
+  "total_intents": 3,
+  "intent_mappings": [
+    {
+      "intent": "view_list",
+      "description": "User wants to see a list of multiple records",
+      "user_phrases": [
+        "show me",
+        "display",
+        "list",
+        "get all",
+        "find",
+        "search for",
+        "view all",
+        "give me all",
+        "fetch"
+      ],
+      "indicators": {
+        "has_filters": [
+          "with",
+          "where",
+          "that have",
+          ">",
+          "<",
+          "=",
+          "equals",
+          "greater than",
+          "less than",
+          "contains"
+        ],
+        "has_sorting": [
+          "top",
+          "best",
+          "highest",
+          "lowest",
+          "sorted by",
+          "order by",
+          "ranked by"
+        ],
+        "has_limit": [
+          "top 5",
+          "first 10",
+          "limit",
+          "only",
+          "just"
+        ]
+      },
+      "recommended_patterns": [
+        {
+          "pattern_id": "user_avatar_list",
+          "when": "data has images or people",
+          "confidence": 0.9,
+          "use_case": "Contact lists, team members, user profiles"
+        },
+        {
+          "pattern_id": "data_table_pattern",
+          "when": "need to compare fields across records",
+          "confidence": 0.85,
+          "use_case": "Opportunities, leads, accounts with multiple fields"
+        },
+        {
+          "pattern_id": "status_list_compact",
+          "when": "focus on status or progress",
+          "confidence": 0.8,
+          "use_case": "Deal pipeline, task status, workflow stages"
+        },
+        {
+          "pattern_id": "timeline_list",
+          "when": "chronological data or activities",
+          "confidence": 0.85,
+          "use_case": "Activity history, event logs, audit trails"
+        },
+        {
+          "pattern_id": "profile_card_list",
+          "when": "rich profile information with images",
+          "confidence": 0.88,
+          "use_case": "Team directory, contact cards, customer profiles"
+        }
+      ]
+    },
+    {
+      "intent": "view_summary",
+      "description": "User wants to see a summary of a single record",
+      "user_phrases": [
+        "summary",
+        "overview",
+        "explain",
+        "describe",
+        "what is",
+        "tell me about",
+        "give me info on"
+      ],
+      "indicators": {
+        "single_record": [
+          "summary",
+          "overview",
+          "explain",
+          "describe",
+          "what is",
+          "tell me about",
+          "give me info on"
+        ]
+      },
+      "recommended_patterns": [
+        {
+          "pattern_id": "account_summary_comprehensive",
+          "when": "account or customer record",
+          "confidence": 0.95,
+          "use_case": "Account 360 view, customer profile, comprehensive overview"
+        }
+      ]
+    },
+    {
+      "intent": "view_table",
+      "description": "User wants to see data in a tabular format",
+      "user_phrases": [
+        "table",
+        "data table",
+        "spreadsheet",
+        "grid",
+        "matrix",
+        "tabular format"
+      ],
+      "indicators": {
+        "has_multiple_fields": [
+          "table",
+          "data table",
+          "spreadsheet",
+          "grid",
+          "matrix",
+          "tabular format"
+        ]
+      },
+      "recommended_patterns": [
+        {
+          "pattern_id": "data_table_pattern",
+          "when": "need to compare fields across records",
+          "confidence": 0.85,
+          "use_case": "Opportunities, leads, accounts with multiple fields"
+        }
+      ]
+    },
+    {
+      "intent": "view_detail",
+      "description": "User wants to see detailed information about a single record",
+      "user_phrases": [
+        "details for",
+        "show",
+        "view",
+        "get info about",
+        "information on",
+        "tell me about",
+        "explain",
+        "describe",
+        "what is"
+      ],
+      "indicators": {
+        "single_record": [
+          "details",
+          "info",
+          "about",
+          "for",
+          "this",
+          "the"
+        ],
+        "has_name": [
+          "John",
+          "specific name",
+          "named",
+          "called"
+        ]
+      },
+      "recommended_patterns": [
+        {
+          "pattern_id": "detail_view_card",
+          "when": "single record with multiple fields",
+          "confidence": 0.95,
+          "use_case": "Contact details, product information, record overview"
+        },
+        {
+          "pattern_id": "account_summary_comprehensive",
+          "when": "account or customer record",
+          "confidence": 0.95,
+          "use_case": "Account 360 view, customer profile, comprehensive overview"
+        },
+        {
+          "pattern_id": "opportunity_summary_detailed",
+          "when": "opportunity or deal record",
+          "confidence": 0.95,
+          "use_case": "Deal details, opportunity overview, sales pipeline item"
+        },
+        {
+          "pattern_id": "lead_summary_comprehensive",
+          "when": "lead or prospect record",
+          "confidence": 0.95,
+          "use_case": "Lead profile, prospect details, qualification view"
+        }
+      ]
+    },
+    {
+      "intent": "view_dashboard",
+      "description": "User wants to see metrics, analytics, or overview dashboard",
+      "user_phrases": [
+        "dashboard",
+        "metrics",
+        "analytics",
+        "overview",
+        "summary",
+        "KPIs",
+        "statistics",
+        "performance",
+        "insights",
+        "report"
+      ],
+      "indicators": {
+        "has_metrics": [
+          "metrics",
+          "KPIs",
+          "statistics",
+          "numbers",
+          "performance",
+          "analytics"
+        ],
+        "has_aggregation": [
+          "total",
+          "average",
+          "sum",
+          "count",
+          "mean",
+          "aggregate"
+        ]
+      },
+      "recommended_patterns": [
+        {
+          "pattern_id": "metric_dashboard",
+          "when": "multiple metrics or KPIs",
+          "confidence": 0.95,
+          "use_case": "Sales dashboard, performance metrics, KPI overview"
+        },
+        {
+          "pattern_id": "executive_dashboard_summary",
+          "when": "executive or high-level overview",
+          "confidence": 0.92,
+          "use_case": "Executive summary, leadership dashboard, strategic overview"
+        }
+      ]
+    }
+  ]
+}
+

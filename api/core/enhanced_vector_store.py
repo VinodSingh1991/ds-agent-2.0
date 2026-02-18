@@ -324,22 +324,6 @@ class EnhancedVectorStore:
                 chunk_type="intent_pattern_mapping"
             )
 
-        # Stage 4: Search data shape patterns (if we have data info)
-        if analysis and "data_characteristics" in analysis:
-            data_query = f"data with {analysis.get('data_characteristics', '')}"
-            results["data_shapes"] = self.search(
-                query=data_query,
-                k=2,
-                chunk_type="data_shape_pattern"
-            )
-
-        # Stage 5: Search component docs (if specific components mentioned)
-        results["component_docs"] = self.search(
-            query=query,
-            k=2,
-            chunk_type="component_doc"
-        )
-
         logger.info(f"Multi-stage search completed: {sum(len(v) for v in results.values())} total results")
         return results
 

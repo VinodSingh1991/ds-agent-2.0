@@ -108,6 +108,8 @@ Determine:
    - view_list: Show multiple records
    - view_detail: Show single record details
    - view_dashboard: Show metrics/analytics
+   - view_table: Show tabular data or comparison or in a table format
+   - view_grid: Show grid of cards
    - create: Create new record
    - edit: Edit existing record
    - search: Search for records

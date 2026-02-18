@@ -1,0 +1,562 @@
+{
+  "generated_at": "2026-02-16",
+  "version": "1.1.0",
+  "total_components": 44,
+  "categories": {
+    "layout": ["Stack", "Card", "CardHeader", "CardBody", "CardFooter"],
+    "typography": ["Heading", "Title", "Text", "Label", "HtmlText", "Em", "Strong", "Quote", "Code", "Kbd"],
+    "data_display": ["Table", "List", "ListItem", "DescriptionList", "DescriptionTerm", "DescriptionDetails", "DescriptionListHorizontalRow", "UnorderedList", "UnorderedListItem", "OrderedList", "OrderedListItem", "Summary", "SummaryItem", "SummaryLabel", "SummaryValue", "Detail", "DetailItem", "DetailLabel", "DetailValue"],
+    "form": ["Button", "Chip"],
+    "feedback": ["Alert", "Badge"],
+    "media": ["Avatar", "Image"],
+    "navigation": ["Divider", "Link"],
+    "icon": ["OutlinedIcon", "FilledIcon", "AiIcon", "BaseIcon"],
+    "specialized": ["BirthdayCard", "ListCard"]
+  },
+  "schemas": [
+    {
+      "type": "Stack",
+      "category": "layout",
+      "description": "Flexible container for arranging children in vertical or horizontal direction",
+      "props": {
+        "direction": { "type": "string", "enum": ["vertical", "horizontal"], "default": "vertical" },
+        "gap": { "type": "number", "description": "Gap between children in pixels" },
+        "align": { "type": "string", "enum": ["start", "center", "end", "stretch", "flex-start", "flex-end"] },
+        "justify": { "type": "string", "enum": ["start", "center", "end", "space-between", "space-around"] },
+        "padding": { "type": "number", "description": "Padding in pixels" },
+        "wrap": { "type": "boolean", "description": "Whether to wrap children" },
+        "flex": { "type": "number", "description": "Flex grow value" }
+      },
+      "supports_children": true,
+      "supports_value": false,
+      "supports_binds_to": false
+    },
+    {
+      "type": "Card",
+      "category": "layout",
+      "description": "Container card with optional header, body, and footer",
+      "props": {
+        "variant": { "type": "string", "enum": ["plain", "outlined", "elevated", "filled"], "default": "plain" },
+        "padding": { "type": "number", "description": "Padding in pixels" },
+        "width": { "type": "string", "description": "Card width (e.g., '300px', '100%')" }
+      },
+      "supports_children": true,
+      "supports_value": false,
+      "supports_binds_to": false
+    },
+    {
+      "type": "CardHeader",
+      "category": "layout",
+      "description": "Header section of a card",
+      "props": {},
+      "supports_children": true,
+      "supports_value": true,
+      "supports_binds_to": false
+    },
+    {
+      "type": "CardBody",
+      "category": "layout",
+      "description": "Body section of a card",
+      "props": {},
+      "supports_children": true,
+      "supports_value": true,
+      "supports_binds_to": false
+    },
+    {
+      "type": "CardFooter",
+      "category": "layout",
+      "description": "Footer section of a card",
+      "props": {},
+      "supports_children": true,
+      "supports_value": true,
+      "supports_binds_to": false
+    },
+    {
+      "type": "Heading",
+      "category": "typography",
+      "description": "Heading text with levels 1-6",
+      "props": {
+        "level": { "type": "number", "enum": [1, 2, 3, 4, 5, 6], "default": 1 },
+        "weight": { "type": "number", "enum": [400, 500, 600, 700] },
+        "color": { "type": "string", "description": "Text color" }
+      },
+      "supports_children": false,
+      "supports_value": true,
+      "supports_binds_to": true
+    },
+    {
+      "type": "Title",
+      "category": "typography",
+      "description": "Title text with levels 1-6",
+      "props": {
+        "level": { "type": "number", "enum": [1, 2, 3, 4, 5, 6], "default": 1 },
+        "weight": { "type": "number", "enum": [400, 500, 600, 700] },
+        "color": { "type": "string", "description": "Text color" }
+      },
+      "supports_children": false,
+      "supports_value": true,
+      "supports_binds_to": true
+    },
+    {
+      "type": "Text",
+      "category": "typography",
+      "description": "Regular text content",
+      "props": {
+        "size": { "type": "number", "description": "Font size in pixels" },
+        "weight": { "type": "number", "enum": [400, 500, 600, 700] },
+        "color": { "type": "string", "description": "Text color" }
+      },
+      "supports_children": false,
+      "supports_value": true,
+      "supports_binds_to": true
+    },
+    {
+      "type": "Label",
+      "category": "typography",
+      "description": "Label text for form fields or data",
+      "props": {
+        "size": { "type": "number", "description": "Font size in pixels" },
+        "weight": { "type": "number", "enum": [400, 500, 600, 700] },
+        "color": { "type": "string", "description": "Text color" }
+      },
+      "supports_children": false,
+      "supports_value": true,
+      "supports_binds_to": true
+    },
+    {
+      "type": "HtmlText",
+      "category": "typography",
+      "description": "Rich HTML text content",
+      "props": {},
+      "supports_children": false,
+      "supports_value": true,
+      "supports_binds_to": false
+    },
+    {
+      "type": "Em",
+      "category": "typography",
+      "description": "Emphasized/italic text",
+      "props": {},
+      "supports_children": true,
+      "supports_value": true,
+      "supports_binds_to": false
+    },
+    {
+      "type": "Strong",
+      "category": "typography",
+      "description": "Bold/strong text",
+      "props": {},
+      "supports_children": true,
+      "supports_value": true,
+      "supports_binds_to": false
+    },
+    {
+      "type": "Quote",
+      "category": "typography",
+      "description": "Blockquote text",
+      "props": {},
+      "supports_children": true,
+      "supports_value": true,
+      "supports_binds_to": false
+    },
+    {
+      "type": "Code",
+      "category": "typography",
+      "description": "Inline code text",
+      "props": {},
+      "supports_children": true,
+      "supports_value": true,
+      "supports_binds_to": false
+    },
+    {
+      "type": "Kbd",
+      "category": "typography",
+      "description": "Keyboard input text",
+      "props": {},
+      "supports_children": true,
+      "supports_value": true,
+      "supports_binds_to": false
+    },
+    {
+      "type": "Table",
+      "category": "data_display",
+      "description": "Data table with columns and rows",
+      "props": {
+        "variant": { "type": "string", "enum": ["bordered", "striped", "plain"], "default": "bordered" },
+        "size": { "type": "string", "enum": ["sm", "md", "lg"], "default": "md" },
+        "columns": { "type": "array", "description": "Column definitions with key, label, sortable" },
+        "sortable": { "type": "boolean", "default": false },
+        "filterable": { "type": "boolean", "default": false },
+        "paginated": { "type": "boolean", "default": false }
+      },
+      "supports_children": false,
+      "supports_value": false,
+      "supports_binds_to": true
+    },
+    {
+      "type": "List",
+      "category": "data_display",
+      "description": "Generic list container",
+      "props": {
+        "variant": { "type": "string", "enum": ["plain", "bordered", "divided"], "default": "plain" },
+        "spacing": { "type": "number", "description": "Spacing between items in pixels" }
+      },
+      "supports_children": true,
+      "supports_value": false,
+      "supports_binds_to": false
+    },
+    {
+      "type": "ListItem",
+      "category": "data_display",
+      "description": "Item in a list",
+      "props": {},
+      "supports_children": true,
+      "supports_value": true,
+      "supports_binds_to": true
+    },
+    {
+      "type": "DescriptionList",
+      "category": "data_display",
+      "description": "Description list with term-details pairs",
+      "props": {
+        "variant": { "type": "string", "enum": ["plain", "bordered", "divided"], "default": "plain" },
+        "spacing": { "type": "number", "description": "Spacing between items in pixels" },
+        "orientation": { "type": "string", "enum": ["vertical", "horizontal"], "default": "vertical" },
+        "gap": { "type": "number", "description": "Gap between items" }
+      },
+      "supports_children": true,
+      "supports_value": false,
+      "supports_binds_to": false
+    },
+    {
+      "type": "DescriptionTerm",
+      "category": "data_display",
+      "description": "Term/label in a description list",
+      "props": {},
+      "supports_children": true,
+      "supports_value": true,
+      "supports_binds_to": true
+    },
+    {
+      "type": "DescriptionDetails",
+      "category": "data_display",
+      "description": "Details/value in a description list",
+      "props": {},
+      "supports_children": true,
+      "supports_value": true,
+      "supports_binds_to": true
+    },
+    {
+      "type": "DescriptionListHorizontalRow",
+      "category": "data_display",
+      "description": "Horizontal row container for description list term-details pairs",
+      "props": {},
+      "supports_children": true,
+      "supports_value": false,
+      "supports_binds_to": false
+    },
+    {
+      "type": "UnorderedList",
+      "category": "data_display",
+      "description": "Unordered/bulleted list",
+      "props": {
+        "variant": { "type": "string", "enum": ["plain", "bordered", "divided"], "default": "plain" },
+        "marker": { "type": "string", "enum": ["disc", "circle", "square", "none"], "default": "disc" },
+        "spacing": { "type": "number", "description": "Spacing between items in pixels" }
+      },
+      "supports_children": true,
+      "supports_value": false,
+      "supports_binds_to": false
+    },
+    {
+      "type": "UnorderedListItem",
+      "category": "data_display",
+      "description": "Item in an unordered list",
+      "props": {
+        "active": { "type": "boolean", "default": false },
+        "onClick": { "type": "function", "description": "Click handler" }
+      },
+      "supports_children": true,
+      "supports_value": true,
+      "supports_binds_to": true
+    },
+    {
+      "type": "OrderedList",
+      "category": "data_display",
+      "description": "Ordered/numbered list",
+      "props": {
+        "variant": { "type": "string", "enum": ["plain", "bordered", "divided"], "default": "plain" },
+        "type": { "type": "string", "enum": ["1", "A", "a", "I", "i"], "default": "1" },
+        "spacing": { "type": "number", "description": "Spacing between items in pixels" }
+      },
+      "supports_children": true,
+      "supports_value": false,
+      "supports_binds_to": false
+    },
+    {
+      "type": "OrderedListItem",
+      "category": "data_display",
+      "description": "Item in an ordered list",
+      "props": {},
+      "supports_children": true,
+      "supports_value": true,
+      "supports_binds_to": true
+    },
+    {
+      "type": "Summary",
+      "category": "data_display",
+      "description": "Summary display with label-value pairs",
+      "props": {
+        "variant": { "type": "string", "enum": ["plain", "bordered", "striped"], "default": "plain" },
+        "spacing": { "type": "number", "description": "Spacing between items" },
+        "orientation": { "type": "string", "enum": ["vertical", "horizontal"], "default": "vertical" }
+      },
+      "supports_children": true,
+      "supports_value": false,
+      "supports_binds_to": false
+    },
+    {
+      "type": "SummaryItem",
+      "category": "data_display",
+      "description": "Item in a summary list",
+      "props": {},
+      "supports_children": true,
+      "supports_value": false,
+      "supports_binds_to": false
+    },
+    {
+      "type": "SummaryLabel",
+      "category": "data_display",
+      "description": "Label in a summary item",
+      "props": {},
+      "supports_children": true,
+      "supports_value": true,
+      "supports_binds_to": true
+    },
+    {
+      "type": "SummaryValue",
+      "category": "data_display",
+      "description": "Value in a summary item",
+      "props": {},
+      "supports_children": true,
+      "supports_value": true,
+      "supports_binds_to": true
+    },
+    {
+      "type": "Detail",
+      "category": "data_display",
+      "description": "Detail view with multi-column layout",
+      "props": {
+        "variant": { "type": "string", "enum": ["plain", "bordered", "striped"], "default": "plain" },
+        "spacing": { "type": "number", "description": "Spacing between items" },
+        "orientation": { "type": "string", "enum": ["vertical", "horizontal"], "default": "vertical" },
+        "columns": { "type": "number", "enum": [1, 2, 3, 4], "default": 1 }
+      },
+      "supports_children": true,
+      "supports_value": false,
+      "supports_binds_to": false
+    },
+    {
+      "type": "DetailItem",
+      "category": "data_display",
+      "description": "Item in a detail view",
+      "props": {},
+      "supports_children": true,
+      "supports_value": false,
+      "supports_binds_to": false
+    },
+    {
+      "type": "DetailLabel",
+      "category": "data_display",
+      "description": "Label in a detail item",
+      "props": {},
+      "supports_children": true,
+      "supports_value": true,
+      "supports_binds_to": true
+    },
+    {
+      "type": "DetailValue",
+      "category": "data_display",
+      "description": "Value in a detail item",
+      "props": {},
+      "supports_children": true,
+      "supports_value": true,
+      "supports_binds_to": true
+    },
+    {
+      "type": "Button",
+      "category": "form",
+      "description": "Action button",
+      "props": {
+        "variant": { "type": "string", "enum": ["solid", "outline", "ghost", "soft", "link"], "default": "solid" },
+        "color": { "type": "string", "enum": ["brand", "success", "warning", "danger", "info", "gray"] },
+        "size": { "type": "string", "enum": ["sm", "md", "lg"], "default": "md" }
+      },
+      "supports_children": false,
+      "supports_value": true,
+      "supports_binds_to": false
+    },
+    {
+      "type": "Chip",
+      "category": "form",
+      "description": "Chip/tag component",
+      "props": {
+        "variant": { "type": "string", "enum": ["solid", "soft", "outline"], "default": "solid" },
+        "color": { "type": "string", "enum": ["brand", "success", "warning", "danger", "info", "error", "gray"] },
+        "size": { "type": "string", "enum": ["sm", "md", "lg"], "default": "md" }
+      },
+      "supports_children": false,
+      "supports_value": true,
+      "supports_binds_to": true
+    },
+    {
+      "type": "Alert",
+      "category": "feedback",
+      "description": "Alert/notification message",
+      "props": {
+        "variant": { "type": "string", "enum": ["note", "tip", "warning", "important", "caution"], "default": "note" },
+        "title": { "type": "string", "description": "Alert title" }
+      },
+      "supports_children": true,
+      "supports_value": true,
+      "supports_binds_to": false
+    },
+    {
+      "type": "Badge",
+      "category": "feedback",
+      "description": "Badge/status indicator",
+      "props": {
+        "variant": { "type": "string", "enum": ["solid", "soft", "outline"], "default": "solid" },
+        "color": { "type": "string", "enum": ["brand", "success", "warning", "danger", "info", "error", "gray"] },
+        "size": { "type": "string", "enum": ["sm", "md", "lg"], "default": "md" }
+      },
+      "supports_children": false,
+      "supports_value": true,
+      "supports_binds_to": true
+    },
+    {
+      "type": "Avatar",
+      "category": "media",
+      "description": "User avatar/profile picture",
+      "props": {
+        "size": { "type": "string", "enum": ["sm", "md", "lg", "xl"], "default": "md" },
+        "src": { "type": "string", "description": "Image URL" }
+      },
+      "supports_children": false,
+      "supports_value": true,
+      "supports_binds_to": true
+    },
+    {
+      "type": "Image",
+      "category": "media",
+      "description": "Image display",
+      "props": {
+        "src": { "type": "string", "description": "Image URL" },
+        "alt": { "type": "string", "description": "Alt text" },
+        "width": { "type": "string", "description": "Image width (e.g., '100%', '300px')" },
+        "height": { "type": "string", "description": "Image height (e.g., '200px')" }
+      },
+      "supports_children": false,
+      "supports_value": false,
+      "supports_binds_to": true
+    },
+    {
+      "type": "Divider",
+      "category": "navigation",
+      "description": "Visual separator line",
+      "props": {
+        "orientation": { "type": "string", "enum": ["horizontal", "vertical"], "default": "horizontal" },
+        "spacing": { "type": "number", "description": "Spacing around divider in pixels" }
+      },
+      "supports_children": false,
+      "supports_value": false,
+      "supports_binds_to": false
+    },
+    {
+      "type": "Link",
+      "category": "navigation",
+      "description": "Hyperlink component",
+      "props": {
+        "href": { "type": "string", "description": "Link URL" },
+        "target": { "type": "string", "enum": ["_self", "_blank"], "default": "_self" }
+      },
+      "supports_children": true,
+      "supports_value": true,
+      "supports_binds_to": false
+    },
+    {
+      "type": "OutlinedIcon",
+      "category": "icon",
+      "description": "Outlined style icon",
+      "props": {
+        "name": { "type": "string", "description": "Icon name (e.g., 'icon-home', 'home')" },
+        "size": { "type": "number", "description": "Icon size in pixels", "default": 16 },
+        "color": { "type": "string", "description": "Icon color" }
+      },
+      "supports_children": false,
+      "supports_value": true,
+      "supports_binds_to": false
+    },
+    {
+      "type": "FilledIcon",
+      "category": "icon",
+      "description": "Filled style icon",
+      "props": {
+        "name": { "type": "string", "description": "Icon name (e.g., 'icon-home', 'home', 'campaign')" },
+        "size": { "type": "number", "description": "Icon size in pixels", "default": 16 },
+        "color": { "type": "string", "description": "Icon color" }
+      },
+      "supports_children": false,
+      "supports_value": true,
+      "supports_binds_to": false
+    },
+    {
+      "type": "AiIcon",
+      "category": "icon",
+      "description": "AI-styled icon",
+      "props": {
+        "name": { "type": "string", "description": "Icon name" },
+        "size": { "type": "number", "description": "Icon size in pixels", "default": 16 },
+        "color": { "type": "string", "description": "Icon color" }
+      },
+      "supports_children": false,
+      "supports_value": true,
+      "supports_binds_to": false
+    },
+    {
+      "type": "BaseIcon",
+      "category": "icon",
+      "description": "Base icon component",
+      "props": {
+        "name": { "type": "string", "description": "Icon name" },
+        "size": { "type": "number", "description": "Icon size in pixels", "default": 16 },
+        "color": { "type": "string", "description": "Icon color" }
+      },
+      "supports_children": false,
+      "supports_value": true,
+      "supports_binds_to": false
+    },
+    {
+      "type": "BirthdayCard",
+      "category": "specialized",
+      "description": "Special birthday celebration card",
+      "props": {
+        "variant": { "type": "string", "enum": ["elevated", "outlined"], "default": "elevated" },
+        "width": { "type": "string", "description": "Card width" }
+      },
+      "supports_children": true,
+      "supports_value": false,
+      "supports_binds_to": false
+    },
+    {
+      "type": "ListCard",
+      "category": "specialized",
+      "description": "Card optimized for list display",
+      "props": {},
+      "supports_children": true,
+      "supports_value": false,
+      "supports_binds_to": false
+    }
+  ]
+}
+

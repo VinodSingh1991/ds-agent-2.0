@@ -135,7 +135,7 @@ class LangGraphUIAgent:
         workflow.add_node("analyze_query", self._analyze_query_node)
         workflow.add_node("retrieve_candidates", self._retrieve_candidates_node)
         workflow.add_node("generate_layout", self._generate_layout_node)
-        
+
         # Define the flow (linear pipeline)
         workflow.set_entry_point("analyze_query")
         workflow.add_edge("analyze_query", "retrieve_candidates")
@@ -204,16 +204,28 @@ class LangGraphUIAgent:
         """
         logger.debug("Node 3: Generating layout with provided data...")
 
+        # Select best candidate (RAG already ranked them, so use first one)
+        candidates = state["candidates"]
+        if not candidates:
+            raise ValueError("No candidates available for layout generation")
+
+        # Prepare context with query
+        context = state.get("context", {})
+        if isinstance(context, dict):
+            context["query"] = state.get("query", "")
+        else:
+            context = {"query": state.get("query", "")}
+
+        # Generate layout by populating data into candidate structure
         layout = self.layout_generator.generate(
-            query=state["query"],
-            analysis=state["analysis"],
-            candidates=state["candidates"],
+            layout=candidates,
             data=state["data"],
-            context=state.get("context")
+            context=context
         )
 
         state["layout"] = layout
-        state["result"] = layout.model_dump()
+        # Use model_dump with exclude_none and exclude_unset to remove null fields
+        state["result"] = layout.model_dump(exclude_none=True, exclude_unset=True)
 
         return state
 

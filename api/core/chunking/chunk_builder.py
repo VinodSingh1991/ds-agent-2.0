@@ -5,84 +5,81 @@ This module builds rich, searchable chunks from pattern metadata.
 Each chunk type has specialized logic for creating searchable text.
 """
 
-from typing import Dict, Any, List
+from typing import Dict, Any
 from .chunk_types import (
-    Chunk, ChunkType, 
-    PatternChunk, QueryLayoutChunk, ComponentDocChunk,
-    IntentMappingChunk, DataShapeChunk
+    PatternChunk, QueryLayoutChunk,
+    IntentMappingChunk
 )
 
 
 class ChunkBuilder:
     """Builds searchable chunks from pattern metadata"""
-    
+
     @staticmethod
     def build_pattern_chunk(pattern: Dict[str, Any]) -> PatternChunk:
         """
         Build a pattern chunk from pattern metadata
-        
+
         Creates rich searchable text with:
         - Pattern name and description
         - Use cases
-        - Components
-        - Data requirements
+
+        Stores complete LayoutResponse structure for direct use by LLM
         """
         pattern_id = pattern.get("pattern_id", "unknown")
         pattern_name = pattern.get("pattern_name", "Unknown Pattern")
         description = pattern.get("description", "")
         use_cases = pattern.get("use_cases", [])
-        
-        # Extract component information
-        components = pattern.get("components", {})
-        required_components = components.get("required_components", [])
-        optional_components = components.get("optional_components", [])
-        layout_direction = components.get("layout_direction", "")
-        
-        # Extract data requirements
-        data_reqs = pattern.get("data_requirements", {})
-        min_fields = data_reqs.get("min_fields", [])
-        recommended_fields = data_reqs.get("recommended_fields", [])
-        
+
+        # Extract best_for and avoid_when
+        best_for = pattern.get("best_for", use_cases)
+        avoid_when = pattern.get("avoid_when", [])
+
         # Build rich searchable text
         searchable_text = f"""
 {pattern_name} for {' '.join(use_cases)}.
 {description}
-Uses components: {' '.join(required_components + optional_components)}.
-Layout direction: {layout_direction}.
-Required fields: {' '.join(min_fields)}.
-Recommended fields: {' '.join(recommended_fields)}.
-Perfect for displaying {pattern.get('best_for', ' '.join(use_cases))}.
+Best for: {' '.join(best_for) if isinstance(best_for, list) else best_for}.
+Avoid when: {' '.join(avoid_when)}.
         """.strip()
-        
-        # Extract keywords
+
+        # Extract keywords including CRM queries
+        crm_queries = pattern.get("crm_queries", [])
         keywords = [
             pattern_id,
             pattern_name.lower(),
             *[uc.lower() for uc in use_cases],
-            *[comp.lower() for comp in required_components],
-            *min_fields,
-            *recommended_fields
+            *[q.lower() for q in crm_queries]
         ]
-        
+
         # Build metadata
         metadata = {
             "pattern_id": pattern_id,
             "pattern_name": pattern_name,
+            "title": pattern_name,
+            "description": description,
             "layout_type": pattern.get("best_for_layout", "list"),
             "complexity": pattern.get("complexity", "medium"),
-            "required_components": required_components,
-            "min_fields": min_fields,
-            "use_cases": use_cases
+            "use_cases": use_cases,
         }
-        
+
+        # Get schema_structure - it should already be a complete LayoutResponse
+        schema_structure = pattern.get("schema_structure", {})
+
+        # Build content - remove schema_structure from pattern to avoid duplication
+        # Create a copy of pattern without schema_structure
+        pattern_without_schema = {k: v for k, v in pattern.items() if k != "schema_structure"}
+
+        content = {
+            "pattern": pattern_without_schema,  # Pattern metadata without schema_structure
+            "schema_structure": schema_structure  # Complete LayoutResponse
+        }
+
         return PatternChunk(
             chunk_id=f"pattern_{pattern_id}",
             searchable_text=searchable_text,
             metadata=metadata,
-            content={
-                "pattern": pattern,
-                "schema_structure": pattern.get("schema_structure", {})
-            },
+            content=content,
             keywords=keywords,
             tags=["pattern", pattern.get("complexity", "medium")]
         )
@@ -149,55 +146,6 @@ Example of how to display {object_type} data with {intent} intent.
             keywords=keywords,
             tags=["example", intent, layout_type]
         )
-    
-    @staticmethod
-    def build_component_doc_chunk(
-        component_type: str,
-        documentation: Dict[str, Any]
-    ) -> ComponentDocChunk:
-        """
-        Build a component documentation chunk
-        
-        Documents how to use a specific component
-        """
-        description = documentation.get("description", "")
-        use_for = documentation.get("use_for", [])
-        data_types = documentation.get("data_types", [])
-        common_bindings = documentation.get("common_bindings", [])
-        
-        # Build searchable text
-        searchable_text = f"""
-{component_type} component for {' '.join(use_for)}.
-{description}
-Use for data types: {' '.join(data_types)}.
-Common bindings: {' '.join(common_bindings)}.
-Perfect for displaying {' '.join(use_for)} in UI.
-        """.strip()
-        
-        # Extract keywords
-        keywords = [
-            component_type.lower(),
-            *[u.lower() for u in use_for],
-            *data_types,
-            *common_bindings
-        ]
-        
-        # Build metadata
-        metadata = {
-            "component_type": component_type,
-            "category": documentation.get("category", "display"),
-            "use_for": use_for,
-            "data_types": data_types
-        }
-        
-        return ComponentDocChunk(
-            chunk_id=f"component_{component_type.lower()}",
-            searchable_text=searchable_text,
-            metadata=metadata,
-            content=documentation,
-            keywords=keywords,
-            tags=["component", documentation.get("category", "display")]
-        )
 
     @staticmethod
     def build_intent_mapping_chunk(
@@ -247,61 +195,3 @@ Use patterns: {' '.join(pattern_names)}
             keywords=keywords,
             tags=["intent", intent]
         )
-
-    @staticmethod
-    def build_data_shape_chunk(
-        shape_id: str,
-        shape_pattern: Dict[str, Any]
-    ) -> DataShapeChunk:
-        """
-        Build a data shape pattern chunk
-
-        Maps data characteristics to recommended layouts
-        """
-        data_chars = shape_pattern.get("data_characteristics", {})
-        recommended_layout = shape_pattern.get("recommended_layout_type", "list")
-        recommended_components = shape_pattern.get("recommended_components", [])
-        reasoning = shape_pattern.get("reasoning", "")
-
-        # Build searchable text
-        record_count = data_chars.get("record_count", {})
-        has_numeric = data_chars.get("has_numeric_fields", False)
-        has_images = data_chars.get("has_images", False)
-
-        searchable_text = f"""
-Data shape: {shape_id}
-Record count: {record_count.get('min', 0)} to {record_count.get('max', 100)}
-Has numeric fields: {has_numeric}
-Has images: {has_images}
-Recommended layout: {recommended_layout}
-Recommended components: {' '.join(recommended_components)}
-Reasoning: {reasoning}
-        """.strip()
-
-        # Extract keywords
-        keywords = [
-            shape_id,
-            recommended_layout,
-            *recommended_components,
-            "numeric" if has_numeric else "",
-            "images" if has_images else ""
-        ]
-        keywords = [k for k in keywords if k]  # Remove empty strings
-
-        # Build metadata
-        metadata = {
-            "shape_id": shape_id,
-            "recommended_layout_type": recommended_layout,
-            "recommended_components": recommended_components,
-            "data_characteristics": data_chars
-        }
-
-        return DataShapeChunk(
-            chunk_id=f"data_shape_{shape_id}",
-            searchable_text=searchable_text,
-            metadata=metadata,
-            content=shape_pattern,
-            keywords=keywords,
-            tags=["data_shape", recommended_layout]
-        )
-

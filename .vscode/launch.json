@@ -2,14 +2,23 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "Python Debugger: Current File",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal"
+        },
+        {
             "name": "Debug API Server",
             "type": "debugpy",
             "request": "launch",
             "module": "uvicorn",
             "args": [
                 "api.main:app",
-                "--host", "0.0.0.0",
-                "--port", "8000",
+                "--host",
+                "0.0.0.0",
+                "--port",
+                "8000",
                 "--reload"
             ],
             "cwd": "${workspaceFolder}/api",
@@ -20,7 +29,8 @@
             "justMyCode": false,
             "autoReload": {
                 "enable": true
-            }
+            },
+            "python": "${command:python.interpreterPath}"
         },
         {
             "name": "Debug API Server (No Reload)",
@@ -29,15 +39,18 @@
             "module": "uvicorn",
             "args": [
                 "api.main:app",
-                "--host", "0.0.0.0",
-                "--port", "8000"
+                "--host",
+                "0.0.0.0",
+                "--port",
+                "8000"
             ],
             "cwd": "${workspaceFolder}/api",
             "env": {
                 "PYTHONPATH": "${workspaceFolder}/api"
             },
             "console": "integratedTerminal",
-            "justMyCode": false
+            "justMyCode": false,
+            "python": "${command:python.interpreterPath}"
         },
         {
             "name": "Debug start_api.py",
@@ -49,7 +62,8 @@
             ],
             "cwd": "${workspaceFolder}/api",
             "console": "integratedTerminal",
-            "justMyCode": false
+            "justMyCode": false,
+            "python": "${command:python.interpreterPath}"
         },
         {
             "name": "Debug Test Script",
@@ -58,7 +72,8 @@
             "program": "${file}",
             "cwd": "${workspaceFolder}/api",
             "console": "integratedTerminal",
-            "justMyCode": true
+            "justMyCode": true,
+            "python": "${command:python.interpreterPath}"
         },
         {
             "name": "Debug Build Vector Index",
@@ -67,7 +82,8 @@
             "program": "${workspaceFolder}/api/build_vector_index.py",
             "cwd": "${workspaceFolder}/api",
             "console": "integratedTerminal",
-            "justMyCode": false
+            "justMyCode": false,
+            "python": "${command:python.interpreterPath}"
         },
         {
             "name": "Debug Generate Chunks",
@@ -76,8 +92,8 @@
             "program": "${workspaceFolder}/api/generate_chunks.py",
             "cwd": "${workspaceFolder}/api",
             "console": "integratedTerminal",
-            "justMyCode": false
+            "justMyCode": false,
+            "python": "${command:python.interpreterPath}"
         }
     ]
 }
-

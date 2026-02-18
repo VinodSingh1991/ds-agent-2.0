@@ -61,11 +61,11 @@ class QueryAnalysis(BaseModel):
         "view_list",        # View multiple records
         "view_detail",      # View single record details
         "view_dashboard",   # View metrics/analytics
-        "create",           # Create new record
-        "edit",             # Edit existing record
-        "search",           # Search for records
-        "analyze",          # Analyze data
-        "compare"           # Compare records
+        "view_table",           # View tabular data
+        "view_summary",           # View summary of a single record,
+        "view_trends",            # View trends over time
+        "view_comparison",        # View comparison between records
+        "view_cards",             # View records as cards
     ] = Field(..., description="User's intent")
     
     # Layout

@@ -1,0 +1,173 @@
+{
+  "generated_at": "2026-02-16",
+  "version": "1.0.0",
+  "description": "Data shape patterns for RAG system. Maps data characteristics to recommended layouts and components.",
+  "total_shapes": 4,
+  "data_shape_patterns": [
+    {
+      "shape_id": "small_list_with_metrics",
+      "description": "Small dataset (3-10 records) with numeric metrics and status fields",
+      "data_characteristics": {
+        "record_count": {
+          "min": 3,
+          "max": 10
+        },
+        "has_numeric_fields": true,
+        "has_images": false,
+        "has_status_fields": true,
+        "field_count": {
+          "min": 3,
+          "max": 8
+        }
+      },
+      "recommended_layout_type": "list",
+      "recommended_components": [
+        "Stack",
+        "Card",
+        "Metric",
+        "Badge",
+        "Heading",
+        "Text"
+      ],
+      "reasoning": "Small datasets with metrics work best in list format where each item can show detailed metrics. Cards provide visual separation and metrics highlight key numbers.",
+      "use_cases": [
+        "Top 5 deals",
+        "Recent opportunities",
+        "Key accounts",
+        "Priority leads",
+        "Active campaigns"
+      ],
+      "example_queries": [
+        "show me top 5 opportunities",
+        "display recent deals",
+        "list key accounts",
+        "show priority leads"
+      ]
+    },
+    {
+      "shape_id": "large_table_data",
+      "description": "Large dataset (20-1000 records) requiring comparison across multiple fields",
+      "data_characteristics": {
+        "record_count": {
+          "min": 20,
+          "max": 1000
+        },
+        "has_numeric_fields": true,
+        "has_images": false,
+        "has_status_fields": true,
+        "field_count": {
+          "min": 5,
+          "max": 15
+        }
+      },
+      "recommended_layout_type": "table",
+      "recommended_components": [
+        "Table",
+        "Badge",
+        "Metric",
+        "Text"
+      ],
+      "reasoning": "Large datasets need table format for efficient scanning and comparison. Tables allow users to sort, filter, and compare multiple fields across many records.",
+      "use_cases": [
+        "All opportunities",
+        "Complete lead list",
+        "Account directory",
+        "Product catalog",
+        "Transaction history"
+      ],
+      "example_queries": [
+        "show me all opportunities",
+        "list all leads",
+        "display all accounts",
+        "show complete product list"
+      ]
+    },
+    {
+      "shape_id": "single_record_detail",
+      "description": "Single record with comprehensive details including images and multiple field types",
+      "data_characteristics": {
+        "record_count": {
+          "min": 1,
+          "max": 1
+        },
+        "has_numeric_fields": true,
+        "has_images": true,
+        "has_status_fields": true,
+        "field_count": {
+          "min": 5,
+          "max": 20
+        }
+      },
+      "recommended_layout_type": "detail",
+      "recommended_components": [
+        "Stack",
+        "Card",
+        "Heading",
+        "Text",
+        "Metric",
+        "Badge",
+        "Avatar",
+        "Detail",
+        "Divider"
+      ],
+      "reasoning": "Single record needs detail view with all fields organized in logical sections. Use cards for grouping, dividers for separation, and appropriate components for each data type.",
+      "use_cases": [
+        "Account details",
+        "Contact profile",
+        "Opportunity overview",
+        "Product details",
+        "Lead information"
+      ],
+      "example_queries": [
+        "show account details",
+        "explain this account",
+        "view contact profile",
+        "opportunity details",
+        "tell me about this lead"
+      ]
+    },
+    {
+      "shape_id": "people_list_with_photos",
+      "description": "List of people/contacts (3-100 records) with profile photos",
+      "data_characteristics": {
+        "record_count": {
+          "min": 3,
+          "max": 100
+        },
+        "has_numeric_fields": false,
+        "has_images": true,
+        "has_status_fields": true,
+        "field_count": {
+          "min": 3,
+          "max": 8
+        }
+      },
+      "recommended_layout_type": "list",
+      "recommended_components": [
+        "Stack",
+        "Card",
+        "Avatar",
+        "Heading",
+        "Text",
+        "Badge",
+        "Summary"
+      ],
+      "reasoning": "People/contacts with photos need avatar list for visual identification. Avatars make it easy to scan and recognize individuals, while cards provide structure for additional information.",
+      "use_cases": [
+        "Team directory",
+        "Contact list",
+        "User profiles",
+        "Stakeholders",
+        "Key contacts"
+      ],
+      "example_queries": [
+        "show team members",
+        "list all contacts",
+        "display stakeholders",
+        "show key contacts",
+        "team directory"
+      ]
+    }
+  ]
+}
+

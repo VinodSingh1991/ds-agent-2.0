@@ -25,11 +25,6 @@ class PatternMetadata(BaseModel):
     # Requirements
     min_records: Optional[int] = Field(None, description="Minimum number of records")
     max_records: Optional[int] = Field(None, description="Maximum number of records")
-    required_fields: List[str] = Field(default_factory=list, description="Required data fields")
-    optional_fields: List[str] = Field(default_factory=list, description="Optional data fields")
-    
-    # Components
-    required_components: List[str] = Field(default_factory=list, description="Components used in this pattern")
     layout_direction: Optional[str] = Field(None, description="Layout direction (vertical, horizontal)")
     
     # Complexity

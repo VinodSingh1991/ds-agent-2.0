@@ -10,7 +10,7 @@ Defines the 5 types of chunks used for enhanced RAG:
 """
 
 from enum import Enum
-from typing import Dict, Any, List, Optional, Literal
+from typing import Dict, Any, List, Literal
 from pydantic import BaseModel, Field
 
 
@@ -18,9 +18,7 @@ class ChunkType(str, Enum):
     """Types of chunks for RAG"""
     PATTERN = "ui_pattern"
     QUERY_LAYOUT_PAIR = "query_layout_pair"
-    COMPONENT_DOC = "component_doc"
     INTENT_MAPPING = "intent_pattern_mapping"
-    DATA_SHAPE = "data_shape_pattern"
 
 
 class Chunk(BaseModel):
@@ -81,23 +79,6 @@ class QueryLayoutChunk(Chunk):
         self.chunk_type = ChunkType.QUERY_LAYOUT_PAIR
 
 
-class ComponentDocChunk(Chunk):
-    """
-    Chunk representing component documentation
-
-    Contains:
-    - Component type
-    - Usage guidelines
-    - Props and schema
-    - Examples
-    """
-    chunk_type: Literal[ChunkType.COMPONENT_DOC] = Field(default=ChunkType.COMPONENT_DOC)
-
-    def __init__(self, **data):
-        super().__init__(**data)
-        self.chunk_type = ChunkType.COMPONENT_DOC
-
-
 class IntentMappingChunk(Chunk):
     """
     Chunk representing intent-to-pattern mapping
@@ -112,20 +93,4 @@ class IntentMappingChunk(Chunk):
     def __init__(self, **data):
         super().__init__(**data)
         self.chunk_type = ChunkType.INTENT_MAPPING
-
-
-class DataShapeChunk(Chunk):
-    """
-    Chunk representing data shape pattern
-
-    Contains:
-    - Data characteristics
-    - Recommended layout
-    - Component suggestions
-    """
-    chunk_type: Literal[ChunkType.DATA_SHAPE] = Field(default=ChunkType.DATA_SHAPE)
-
-    def __init__(self, **data):
-        super().__init__(**data)
-        self.chunk_type = ChunkType.DATA_SHAPE
 

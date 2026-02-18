@@ -1,0 +1,165 @@
+{
+  "generated_at": "2026-02-14",
+  "version": "1.0.0",
+  "description": "Comprehensive CRM query-to-pattern mappings for RAG system. Extracted from all pattern files in api/dataset/patterns/",
+  "total_patterns": 150,
+  "query_patterns": [
+    {
+      "query": "explain this account",
+      "pattern_id": "account_summary_comprehensive",
+      "intent": "view_summary",
+      "object_type": "account",
+      "layout_type": "comprehensive",
+      "use_case": "complete account overview",
+      "analysis": {
+        "filters": [],
+        "sort": null,
+        "limit": 1
+      }
+    },
+    {
+      "query": "give me summary of this account",
+      "pattern_id": "account_summary_comprehensive",
+      "intent": "view_summary",
+      "object_type": "account",
+      "layout_type": "comprehensive",
+      "use_case": "account 360 view",
+      "analysis": {
+        "filters": [],
+        "sort": null,
+        "limit": 1
+      }
+    },
+    {
+      "query": "overview of the account",
+      "pattern_id": "account_summary_comprehensive",
+      "intent": "view_summary",
+      "object_type": "account",
+      "layout_type": "comprehensive",
+      "use_case": "customer summary page",
+      "analysis": {
+        "filters": [],
+        "sort": null,
+        "limit": 1
+      }
+    },
+    {
+      "query": "account summary",
+      "pattern_id": "account_summary_comprehensive",
+      "intent": "view_summary",
+      "object_type": "account",
+      "layout_type": "comprehensive",
+      "use_case": "account detail dashboard",
+      "analysis": {
+        "filters": [],
+        "sort": null,
+        "limit": 1
+      }
+    },
+    {
+      "query": "show account details",
+      "pattern_id": "account_summary_comprehensive",
+      "intent": "view_summary",
+      "object_type": "account",
+      "layout_type": "comprehensive",
+      "use_case": "comprehensive account profile",
+      "analysis": {
+        "filters": [],
+        "sort": null,
+        "limit": 1
+      }
+    },
+    {
+      "query": "account 360",
+      "pattern_id": "account_summary_comprehensive",
+      "intent": "view_summary",
+      "object_type": "account",
+      "layout_type": "comprehensive",
+      "use_case": "account intelligence view",
+      "analysis": {
+        "filters": [],
+        "sort": null,
+        "limit": 1
+      }
+    },
+    {
+      "query": "complete account view",
+      "pattern_id": "account_summary_comprehensive",
+      "intent": "view_summary",
+      "object_type": "account",
+      "layout_type": "comprehensive",
+      "use_case": "full account context",
+      "analysis": {
+        "filters": [],
+        "sort": null,
+        "limit": 1
+      }
+    },
+    {
+      "query": "account information",
+      "pattern_id": "account_summary_comprehensive",
+      "intent": "view_summary",
+      "object_type": "account",
+      "layout_type": "comprehensive",
+      "use_case": "account relationship view",
+      "analysis": {
+        "filters": [],
+        "sort": null,
+        "limit": 1
+      }
+    },
+    {
+      "query": "tell me about this account",
+      "pattern_id": "account_summary_comprehensive",
+      "intent": "view_summary",
+      "object_type": "account",
+      "layout_type": "comprehensive",
+      "use_case": "complete account overview",
+      "analysis": {
+        "filters": [],
+        "sort": null,
+        "limit": 1
+      }
+    },
+    {
+      "query": "account overview",
+      "pattern_id": "account_summary_comprehensive",
+      "intent": "view_summary",
+      "object_type": "account",
+      "layout_type": "comprehensive",
+      "use_case": "account 360 view",
+      "analysis": {
+        "filters": [],
+        "sort": null,
+        "limit": 1
+      }
+    },
+    {
+      "query": "summarize account",
+      "pattern_id": "account_summary_comprehensive",
+      "intent": "view_summary",
+      "object_type": "account",
+      "layout_type": "comprehensive",
+      "use_case": "customer summary page",
+      "analysis": {
+        "filters": [],
+        "sort": null,
+        "limit": 1
+      }
+    },
+    {
+      "query": "account profile",
+      "pattern_id": "account_summary_comprehensive",
+      "intent": "view_summary",
+      "object_type": "account",
+      "layout_type": "comprehensive",
+      "use_case": "comprehensive account profile",
+      "analysis": {
+        "filters": [],
+        "sort": null,
+        "limit": 1
+      }
+    }
+  ]
+}
+
