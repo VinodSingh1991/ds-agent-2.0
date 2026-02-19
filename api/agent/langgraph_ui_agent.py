@@ -124,26 +124,59 @@ class LangGraphUIAgent:
     def _build_graph(self) -> StateGraph:
         """
         Build the LangGraph workflow
-        
+
         Returns:
             Compiled StateGraph
         """
         # Create the graph
         workflow = StateGraph(AgentState)
-        
+
         # Add nodes (each wraps one of our existing components)
         workflow.add_node("analyze_query", self._analyze_query_node)
+        workflow.add_node("handle_greeting", self._handle_greeting_node)
         workflow.add_node("retrieve_candidates", self._retrieve_candidates_node)
         workflow.add_node("generate_layout", self._generate_layout_node)
 
-        # Define the flow (linear pipeline)
+        # Define the flow with conditional routing
         workflow.set_entry_point("analyze_query")
-        workflow.add_edge("analyze_query", "retrieve_candidates")
+
+        # After analysis, route based on intent
+        workflow.add_conditional_edges(
+            "analyze_query",
+            self._route_after_analysis,
+            {
+                "greeting": "handle_greeting",
+                "crm_query": "retrieve_candidates"
+            }
+        )
+
+        # Greeting goes directly to END
+        workflow.add_edge("handle_greeting", END)
+
+        # CRM queries follow the normal pipeline
         workflow.add_edge("retrieve_candidates", "generate_layout")
         workflow.add_edge("generate_layout", END)
-        
+
         # Compile the graph
         return workflow.compile()
+
+    def _route_after_analysis(self, state: AgentState) -> str:
+        """
+        Route based on query analysis
+
+        Args:
+            state: Current state with analysis
+
+        Returns:
+            Next node name ("greeting" or "crm_query")
+        """
+        analysis = state.get("analysis")
+        if analysis and analysis.intent == "greeting":
+            logger.info("Routing to greeting handler")
+            return "greeting"
+        else:
+            logger.info("Routing to CRM query pipeline")
+            return "crm_query"
 
     def _analyze_query_node(self, state: AgentState) -> AgentState:
         """
@@ -166,6 +199,72 @@ class LangGraphUIAgent:
 
         state["analysis"] = analysis
         return state
+
+    def _handle_greeting_node(self, state: AgentState) -> AgentState:
+        """
+        Node: Handle greeting/general conversation
+
+        Generates a friendly response using ChatGPT and wraps it in a simple layout.
+
+        Args:
+            state: Current state
+
+        Returns:
+            Updated state with greeting response in default layout
+        """
+        logger.debug("Handling greeting/general conversation...")
+
+        query = state["query"]
+
+        try:
+            # Get a friendly response from ChatGPT
+            completion = self.client.chat.completions.create(
+                model=self.model,
+                messages=[
+                    {
+                        "role": "system",
+                        "content": """You are a helpful CRM assistant. Respond to greetings and general questions in a friendly, concise way.
+
+If the user asks what you can do, explain that you can help them:
+- View and analyze CRM data (leads, contacts, opportunities, accounts)
+- Create custom layouts and dashboards
+- Filter and sort records
+- Generate reports and insights
+
+Keep responses brief and friendly (2-3 sentences max)."""
+                    },
+                    {
+                        "role": "user",
+                        "content": query
+                    }
+                ],
+                temperature=0.7,
+                max_tokens=150
+            )
+
+            response_text = completion.choices[0].message.content
+            logger.info(f"Generated greeting response: {response_text[:50]}...")
+
+            # Wrap response in default layout
+            layout_dict = self.get_fallback_layout(response_text)
+
+            # Create LayoutResponse object
+            layout = LayoutResponse(**layout_dict)
+
+            state["layout"] = layout
+            state["result"] = layout.model_dump(exclude_none=True, exclude_unset=True)
+
+            return state
+
+        except Exception as e:
+            logger.error(f"Error handling greeting: {e}")
+            # Fallback to simple response
+            fallback_text = "Hello! I'm your CRM assistant. I can help you view and analyze your CRM data. Try asking me to show leads, contacts, or opportunities!"
+            layout_dict = self.get_fallback_layout(fallback_text)
+            layout = LayoutResponse(**layout_dict)
+            state["layout"] = layout
+            state["result"] = layout.model_dump(exclude_none=True, exclude_unset=True)
+            return state
 
     def _retrieve_candidates_node(self, state: AgentState) -> AgentState:
         """
@@ -232,7 +331,7 @@ class LangGraphUIAgent:
     def generate(
         self,
         query: str,
-        data: List[Dict[str, Any]],
+        data: Optional[List[Dict[str, Any]]] = None,
         context: Optional[Dict[str, Any]] = None
     ) -> Dict[str, Any]:
         """
@@ -241,8 +340,8 @@ class LangGraphUIAgent:
         This is the main entry point - same interface as StructuredUIAgent.
 
         Args:
-            query: User query (e.g., "show me top 5 leads")
-            data: Data to bind to layout (REQUIRED - must be provided from outside)
+            query: User query (e.g., "show me top 5 leads" or "hello")
+            data: Data to bind to layout (OPTIONAL for greetings, REQUIRED for CRM queries)
             context: Optional context (user preferences, etc.)
 
         Returns:
@@ -251,13 +350,15 @@ class LangGraphUIAgent:
         Example:
             agent = LangGraphUIAgent()
 
-            # You provide the data
+            # Greeting (no data needed)
+            layout = agent.generate(query="hello")
+
+            # CRM query (data required)
             leads_data = [
                 {"id": 1, "name": "Acme Corp", "revenue": 75000, "status": "qualified"},
                 {"id": 2, "name": "TechStart", "revenue": 120000, "status": "negotiation"}
             ]
 
-            # Agent generates layout
             layout = agent.generate(
                 query="show me all leads",
                 data=leads_data
@@ -265,14 +366,11 @@ class LangGraphUIAgent:
         """
         logger.info(f"Generating layout for query: {query}")
 
-        if not data:
-            raise ValueError("Data is required. Please provide data from your application.")
-
         try:
-            # Create initial state
+            # Create initial state (data can be None for greetings)
             initial_state: AgentState = {
                 "query": query,
-                "data": data,
+                "data": data or [],
                 "context": context,
                 "analysis": None,
                 "candidates": None,
@@ -310,9 +408,48 @@ class LangGraphUIAgent:
                 "candidate_retriever": "CandidateRetriever",
                 "layout_generator": "LayoutGenerator"
             },
-            "graph_nodes": ["analyze_query", "retrieve_candidates", "generate_layout"],
+            "graph_nodes": ["analyze_query", "handle_greeting", "retrieve_candidates", "generate_layout"],
             "data_handling": "external",
             "vector_store": vector_stats,
             "status": "ready"
+        }
+
+    def get_fallback_layout(self, message: str) -> Dict[str, Any]:
+        """
+        Get fallback layout for greetings and general responses
+
+        Args:
+            message: The message to display
+
+        Returns:
+            Simple layout with the message in an HtmlText component
+        """
+        return {
+            "id": "greeting_layout",
+            "query": "greeting",
+            "object_type": "general",
+            "layout_type": "detail",
+            "sections": [
+                {
+                    "id": "body",
+                    "title": None,
+                    "description": None,
+                    "rows": [
+                        {
+                            "type": "Stack",
+                            "direction": "vertical",
+                            "gap": 8,
+                            "children": [
+                                {
+                                    "llm_instruction": "if the user query is a greeting or general question, respond with a friendly message. Wrap the message in a simple layout with an HtmlText component. also add the role of the message as 'greeting' in the component. like i am your assistant and i can help you with your CRM data. how can i assist you today?",
+                                    "type": "HtmlText",
+                                    "value": f"<div class='greeting-message'>{message}</div>"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ],
+            "summary": "Greeting response"
         }
 

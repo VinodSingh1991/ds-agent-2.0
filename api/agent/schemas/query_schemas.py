@@ -58,6 +58,7 @@ class QueryAnalysis(BaseModel):
     
     # Intent
     intent: Literal[
+        "greeting",         # Greeting or general conversation (not CRM-related)
         "view_list",        # View multiple records
         "view_detail",      # View single record details
         "view_dashboard",   # View metrics/analytics

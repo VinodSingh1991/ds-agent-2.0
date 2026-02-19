@@ -32,12 +32,14 @@
     "query": "{{query}}",
     "object_type": "account",
     "layout_type": "detail",
-    "summary": "Comprehensive account overview with personal information, insights, activities, related records, and key metrics",
+    "summary": "{{summary}}",
+    "LLm_instructions": "Fill the summary and title fields. summary should contain the overall information about the account.",
     "sections": [
       {
         "id": "header",
-        "title": "{{Account Overview}}",
-        "description": "Key account information and status",
+        "title": "{{title}}",
+        "description": "{{description}}",
+        "LLm_instructions": "Fill the title and description fields. title should be a concise and descriptive name for the section. description should provide additional context about the section.",
         "rows": [
           {
             "type": "Stack",
@@ -69,7 +71,8 @@
                         "children": [
                           {
                             "type": "Heading",
-                            "binds_to": "account_name",
+                            "value": "{{account_name}}",
+                            "LLm_instructions": "Fill the value field. This should be the name of the account.",
                             "props": {
                               "level": 5
                             }
@@ -84,7 +87,8 @@
                             "children": [
                               {
                                 "type": "Badge",
-                                "binds_to": "status",
+                                "value": "{{status}}",
+                                "LLm_instructions": "Fill the value field. This should be the status of the account.",
                                 "props": {
                                   "variant": "solid",
                                   "color": "success"
@@ -92,7 +96,7 @@
                               },
                               {
                                 "type": "Text",
-                                "binds_to": "account_id",
+                                "value": "{{account_id}}",
                                 "props": {
                                   "color": "#6b7280"
                                 }
@@ -101,7 +105,8 @@
                           },
                           {
                             "type": "HtmlText",
-                            "binds_to": "description",
+                            "value": "{{description}} ",
+                            "LLm_instructions": "Fill the value field. This should be the description of the account.",
                             "props": {}
                           }
                         ]
@@ -116,8 +121,9 @@
       },
       {
         "id": "personal_info",
-        "title": "Personal Information",
-        "description": "Account details and contact information",
+        "title": "{{title}}",
+        "description": "{{description}}",
+        "LLm_instructions": "Fill the title and description fields. title should be a concise and descriptive name for the section. description should provide additional context about the section.",
         "rows": [
           {
             "type": "Stack",
@@ -126,7 +132,7 @@
             "children": [
               {
                 "type": "Heading",
-                "value": "Personal Information",
+                "value": "{{title}}",
                 "props": {
                   "level": 5
                 }
@@ -141,105 +147,18 @@
                 "children": [
                   {
                     "type": "DetailItem",
+                    "LLm_instructions": "Fill the label and value fields. label should be the label for the detail item. value should be the value for the detail item. children should be list or repeated structure if there are multiple values for the same label.",
                     "children": [
                       {
                         "type": "DetailLabel",
-                        "value": "Industry"
+                        "value": "{{label}}",
+                        "LLm_instructions": "Fill the value field. This should be the label for the industry detail item."
+
                       },
                       {
                         "type": "DetailValue",
-                        "binds_to": "industry"
-                      }
-                    ]
-                  },
-                  {
-                    "type": "DetailItem",
-                    "children": [
-                      {
-                        "type": "DetailLabel",
-                        "value": "Annual Revenue"
-                      },
-                      {
-                        "type": "DetailValue",
-                        "binds_to": "annual_revenue"
-                      }
-                    ]
-                  },
-                  {
-                    "type": "DetailItem",
-                    "children": [
-                      {
-                        "type": "DetailLabel",
-                        "value": "Employees"
-                      },
-                      {
-                        "type": "DetailValue",
-                        "binds_to": "employees"
-                      }
-                    ]
-                  },
-                  {
-                    "type": "DetailItem",
-                    "children": [
-                      {
-                        "type": "DetailLabel",
-                        "value": "Account Owner"
-                      },
-                      {
-                        "type": "DetailValue",
-                        "binds_to": "account_owner"
-                      }
-                    ]
-                  },
-                  {
-                    "type": "DetailItem",
-                    "children": [
-                      {
-                        "type": "DetailLabel",
-                        "value": "Website"
-                      },
-                      {
-                        "type": "DetailValue",
-                        "binds_to": "website"
-                      }
-                    ]
-                  },
-                  {
-                    "type": "DetailItem",
-                    "children": [
-                      {
-                        "type": "DetailLabel",
-                        "value": "Phone"
-                      },
-                      {
-                        "type": "DetailValue",
-                        "binds_to": "phone"
-                      }
-                    ]
-                  },
-                  {
-                    "type": "DetailItem",
-                    "children": [
-                      {
-                        "type": "DetailLabel",
-                        "value": "Email"
-                      },
-                      {
-                        "type": "DetailValue",
-                        "binds_to": "email"
-                      }
-                    ]
-                  },
-                  {
-                    "type": "DetailItem",
-                    "children": [
-                      {
-                        "type": "DetailLabel",
-                        "value": "Address"
-                      },
-                      {
-                        "type": "DetailValue",
-                        "binds_to": "address"
+                        "value": "{{industry}}",
+                        "LLm_instructions": "Fill the value field. This should be the value for the industry detail item."
                       }
                     ]
                   }
@@ -251,8 +170,9 @@
       },
       {
         "id": "insights",
-        "title": "Key Insights",
-        "description": "Important insights about this account",
+        "title": "{{title}}",
+        "description": "{{description}}",
+        "LLm_instructions": "Fill the title and description fields. title should be a concise and descriptive name for the section. description should provide additional context about the section. This is specially design to view Insight data, if you find any insight, fill it",
         "rows": [
           {
             "type": "Stack",
@@ -261,7 +181,8 @@
             "children": [
               {
                 "type": "Heading",
-                "value": "Key Insights",
+                "value": "{{title}}",
+                "LLm_instructions": "Fill the value field. This should be the title for the section.",
                 "props": {
                   "level": 5
                 }
@@ -294,7 +215,8 @@
             "children": [
               {
                 "type": "Heading",
-                "value": "Recent Activities",
+                "value": "{{title}}",
+                "LLm_instructions": "Fill the value field. This should be the title for the section.",
                 "props": {
                   "level": 5
                 }
@@ -324,7 +246,7 @@
                         "children": [
                           {
                             "type": "Strong",
-                            "binds_to": "description"
+                            "value": "{{description}}"
                           },
                           {
                             "type": "Text",
@@ -360,7 +282,8 @@
             "children": [
               {
                 "type": "Heading",
-                "value": "Open Opportunities",
+                "value": "{{title}}",
+                "LLm_instructions": "Fill the value field. This should be the title for the section.",
                 "props": {
                   "level": 5
                 }
@@ -405,35 +328,20 @@
             "children": [
               {
                 "type": "Heading",
-                "value": "Related Leads",
+                "value": "{{title}}",
+                "LLm_instructions": "Fill the value field. This should be the title for the section.",
                 "props": {
                   "level": 5
                 }
               },
               {
                 "type": "Table",
-                "binds_to": "related_leads",
+                "llm_instructions": "Fill the columns field. This should be the columns for the table. Make sure to include name, title, status and score as columns.",
                 "props": {
                   "variant": "bordered",
                   "size": "md",
-                  "columns": [
-                    {
-                      "key": "name",
-                      "header": "Lead Name"
-                    },
-                    {
-                      "key": "title",
-                      "header": "Title"
-                    },
-                    {
-                      "key": "status",
-                      "header": "Status"
-                    },
-                    {
-                      "key": "score",
-                      "header": "Score"
-                    }
-                  ]
+                  "columns": "{{columns}}",
+                  "data": "{{data}}"
                 }
               }
             ]
@@ -450,35 +358,20 @@
             "children": [
               {
                 "type": "Heading",
-                "value": "Related Cases",
+                "value": "{{title}}",
+                "LLm_instructions": "Fill the value field. This should be the title for the section.",
                 "props": {
                   "level": 5
                 }
               },
               {
                 "type": "Table",
-                "binds_to": "related_cases",
+                "llm_instructions": "Fill the columns field. This should be the columns for the table. Make sure to include case_number, subject, status and priority as columns.",
                 "props": {
                   "variant": "bordered",
                   "size": "md",
-                  "columns": [
-                    {
-                      "key": "case_number",
-                      "header": "Case #"
-                    },
-                    {
-                      "key": "subject",
-                      "header": "Subject"
-                    },
-                    {
-                      "key": "status",
-                      "header": "Status"
-                    },
-                    {
-                      "key": "priority",
-                      "header": "Priority"
-                    }
-                  ]
+                  "columns": "{{columns}}",
+                  "data": "{{data}}"
                 }
               }
             ]
@@ -495,13 +388,15 @@
             "children": [
               {
                 "type": "Heading",
-                "value": "Products & Services",
+                "value": "{{title}}",
+                "LLm_instructions": "Fill the value field. This should be the title for the section.",  
                 "props": {
                   "level": 5
                 }
               },
               {
                 "type": "UnorderedList",
+                "LLm_instructions": "Fill the value field. This should be the title for the section.",
                 "props": {
                   "variant": "divided",
                   "spacing": 8
@@ -509,7 +404,7 @@
                 "children": [
                   {
                     "type": "UnorderedListItem",
-                    "repeat": "products",
+                    "repeat": "related_accounts",
                     "children": [
                       {
                         "type": "Stack",
@@ -520,14 +415,16 @@
                         "children": [
                           {
                             "type": "Text",
-                            "binds_to": "name",
+                            "value": "{{name}}",
+                            "LLm_instructions": "Fill the value field. This should be the name of the related account.",
                             "props": {
                               "weight": 500
                             }
                           },
                           {
                             "type": "Chip",
-                            "binds_to": "status",
+                            "value": "{{status}}",
+                            "LLm_instructions": "Fill the value field. This should be the status of the related account.",
                             "props": {
                               "size": "sm",
                               "variant": "soft",
@@ -554,7 +451,8 @@
             "children": [
               {
                 "type": "Heading",
-                "value": "Key Contacts",
+                "value": "{{title}}",
+                "LLm_instructions": "Fill the value field. This should be the title for the section.",
                 "props": {
                   "level": 5
                 }
@@ -600,15 +498,18 @@
                             "children": [
                               {
                                 "type": "Title",
-                                "binds_to": "name"
+                                "value": "{{name}}",
+                                "LLm_instructions": "Fill the value field. This should be the name of the key contact."
                               },
                               {
                                 "type": "Text",
-                                "binds_to": "title"
+                                "value": "{{title}}",
+                                "LLm_instructions": "Fill the value field. This should be the title of the key contact."
                               },
                               {
                                 "type": "Text",
-                                "binds_to": "email",
+                                "value": "{{email}}",
+                                "LLm_instructions": "Fill the value field. This should be the email of the key contact.",
                                 "props": {
                                   "size": 12
                                 }

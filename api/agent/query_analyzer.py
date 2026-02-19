@@ -102,9 +102,18 @@ class QueryAnalyzer:
 
 Query: "{query}"
 
+IMPORTANT: First determine if this is a greeting or general conversation (not CRM-related).
+
 Determine:
-1. What type of object/entity is being queried (e.g., "lead", "contact", "deal", "user", "product")
-2. What is the user's intent:
+1. Is this a greeting or general conversation?
+   - If YES: Set intent to "greeting" and object_type to "general"
+   - Examples: "hi", "hello", "how are you", "what can you do", "help", "thanks"
+
+2. If NOT a greeting, what type of CRM object/entity is being queried?
+   - Examples: "lead", "contact", "deal", "opportunity", "account", "user", "product"
+
+3. What is the user's intent:
+   - greeting: Greeting or general conversation (not CRM-related)
    - view_list: Show multiple records
    - view_detail: Show single record details
    - view_dashboard: Show metrics/analytics
@@ -116,7 +125,7 @@ Determine:
    - analyze: Analyze data
    - compare: Compare records
 
-3. What layout type is most appropriate:
+4. What layout type is most appropriate:
    - list: Multiple items in list format
    - detail: Single item with all details
    - dashboard: Metrics and charts
@@ -125,9 +134,9 @@ Determine:
    - form: Input form
    - timeline: Chronological view
 
-4. Any filters mentioned (e.g., "revenue > 50k", "status = active", "created this month")
-5. Any sorting requirements (e.g., "top 5", "highest revenue", "newest first")
-6. Any limit on results (e.g., "top 5" = limit 5, "first 10" = limit 10)
+5. Any filters mentioned (e.g., "revenue > 50k", "status = active", "created this month")
+6. Any sorting requirements (e.g., "top 5", "highest revenue", "newest first")
+7. Any limit on results (e.g., "top 5" = limit 5, "first 10" = limit 10)
 
 Provide clear reasoning for your choices."""
 
