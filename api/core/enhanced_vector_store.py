@@ -253,10 +253,6 @@ class EnhancedVectorStore:
             if chunk_type and chunk.get("chunk_type") != chunk_type:
                 continue
 
-            if metadata_filter:
-                if not self._matches_filter(metadata.get("metadata", {}), metadata_filter):
-                    continue
-
             # Calculate relevance score (convert distance to similarity)
             # Lower distance = higher similarity
             similarity = 1 / (1 + distance)
@@ -279,7 +275,9 @@ class EnhancedVectorStore:
     def multi_stage_search(
         self,
         query: str,
-        analysis: Optional[Dict[str, Any]] = None,
+        intent: Optional[str] = None,
+        layout_type: Optional[str] = None,
+        object_type: Optional[str] = None,
         k_per_stage: int = 3
     ) -> Dict[str, List[Dict[str, Any]]]:
         """
@@ -287,7 +285,9 @@ class EnhancedVectorStore:
 
         Args:
             query: Search query
-            analysis: Query analysis (optional, for better filtering)
+            intent: Intent for better filtering (optional)
+            layout_type: Layout type for better filtering (optional)
+            object_type: Object type for better filtering (optional)
             k_per_stage: Results per stage
 
         Returns:
@@ -304,11 +304,12 @@ class EnhancedVectorStore:
 
         # Stage 2: Search UI patterns
         pattern_query = query
-        if analysis:
+        if intent or layout_type or object_type:
             # Enhance query with analysis
-            intent = analysis.get("intent", "")
-            layout_type = analysis.get("layout_type", "")
-            pattern_query = f"{query} {intent} {layout_type}"
+            intent = intent or ""
+            layout_type = layout_type or ""
+            object_type = object_type or "" 
+            pattern_query = f"{query} {intent} {layout_type} {object_type}"
 
         results["patterns"] = self.search(
             query=pattern_query,
@@ -317,9 +318,9 @@ class EnhancedVectorStore:
         )
 
         # Stage 3: Search intent mappings
-        if analysis and analysis.get("intent"):
+        if intent:
             results["intent_mappings"] = self.search(
-                query=analysis["intent"],
+                query=intent,
                 k=2,
                 chunk_type="intent_pattern_mapping"
             )

@@ -196,6 +196,7 @@ Respond in JSON format:
 {{
     "object_type": "the detected object type",
     "confidence": 0.95,
+    "method": "llm",
     "reasoning": "brief explanation of why you chose this object type"
 }}"""
 

@@ -101,3 +101,18 @@ class QueryAnalysis(BaseModel):
     class Config:
         extra = "forbid"  # Required for OpenAI structured outputs
 
+
+class QueryNormalization(BaseModel):
+    """
+    Normalized query representation
+    
+    This schema captures the key components of a user's query in a structured format.
+    It's designed to be easily consumed by downstream systems like vector DBs and UI generators.
+    """
+    # Object information
+    normalized_query: str = Field(..., description="Normalized version of the user's query")
+    is_crm_related: bool = Field(..., description="True if this query is related to CRM")
+    reasoning: str = Field(..., description="Explanation of this analysis")
+    
+    class Config:
+        extra = "forbid"  # Required for OpenAI structured outputs

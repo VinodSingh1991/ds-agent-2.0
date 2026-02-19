@@ -34,40 +34,11 @@ def test_object_analyzer():
         print(f"  Confidence: {result['confidence']:.2f}")
         print(f"  Method: {result['method']}")
 
-def test_all_together():
-    """Test all three analyzers working together"""
-    print("\n" + "="*80)
-    print("TEST 2: All Analyzers Together (Complete Pipeline)")
-    print("="*80)
-    
-    api_key = os.getenv("OPENAI_API_KEY")
-    client = OpenAI(api_key=api_key) if api_key else None
-    
-    object_analyzer = ObjectAnalyzer(client=client)
-    
-    # Sample data
-    leads_data = [
-        {"id": 1, "name": "Acme Corp", "revenue": 75000, "status": "qualified"},
-        {"id": 2, "name": "TechStart", "revenue": 120000, "status": "negotiation"},
-        {"id": 3, "name": "Global Inc", "revenue": 50000, "status": "prospecting"}
-    ]
-    
-    query = "show me all leads"
-    
-    print(f"\nQuery: '{query}'")
-    print(f"{'─'*80}")
-    
-    # Step 2: Detect object type
-    object_result = object_analyzer.analyze(query)
-    print(f"2️⃣  Object: {object_result['object_type']} (confidence: {object_result['confidence']:.2f})")
-
-
 if __name__ == "__main__":
     print("\n🚀 Two-Analyzer Test Suite")
     print("Testing hybrid approach for Object and Layout detection\n")
     
     test_object_analyzer()
-    test_all_together()
     
     print("\n" + "="*80)
     print("✅ All tests completed!")

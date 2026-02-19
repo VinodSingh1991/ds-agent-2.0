@@ -37,15 +37,21 @@ class CandidateRetriever:
     def retrieve(
         self,
         query: str,
-        analysis: QueryAnalysis,
-        k: int = 5
+        k: int = 5,
+        intent: str = None,
+        layout_type: str = None,
+        object_type: str = None
     ) -> List[Dict[str, Any]]:
         """
         Retrieve candidate layouts
         
         Args:
             query: User query
-            analysis: Query analysis
+            intent: Intent for better filtering (optional)
+            layout_type: Layout type for better filtering (optional)
+            object_type: Object type for better filtering (optional)
+            confidence: Confidence score for better filtering (optional)
+            reasoning: Reasoning for better filtering (optional)
             k: Number of candidates to return
             
         Returns:
@@ -56,7 +62,9 @@ class CandidateRetriever:
         # Multi-stage search
         results = self.vector_store.multi_stage_search(
             query=query,
-            analysis=analysis.model_dump(),
+            intent=intent,
+            layout_type=layout_type,
+            object_type=object_type,
             k_per_stage=3
         )
         

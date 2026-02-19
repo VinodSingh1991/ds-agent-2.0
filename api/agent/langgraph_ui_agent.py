@@ -13,7 +13,12 @@ This is a drop-in replacement for StructuredUIAgent with graph-based workflow.
 
 import os
 from typing import Dict, Any, List, Optional, TypedDict
+from xml.parsers.expat import model
 from loguru import logger
+
+from agent.intent_analizer import IntentAnalyzer
+from agent.layout_analyzer import LayoutAnalyzer
+from agent.query_normalizer import QueryNormalizer
 
 try:
     from openai import OpenAI
@@ -28,10 +33,10 @@ except ImportError:
     StateGraph = None
     END = None
 
+from agent.object_analyzer import ObjectAnalyzer
 from agent.query_analyzer import QueryAnalyzer
 from agent.candidate_retriever import CandidateRetriever
 from agent.layout_generator import LayoutGenerator
-from agent.schemas.query_schemas import QueryAnalysis
 from agent.schemas.layout_schemas import LayoutResponse
 from core.enhanced_vector_store import EnhancedVectorStore
 
@@ -41,16 +46,31 @@ class AgentState(TypedDict):
     """State that flows through the LangGraph pipeline"""
     # Input
     query: str
+    #step 1 output
+    normalized_query: Optional[str]
+    is_crm_related: Optional[bool]
+    reasoning: Optional[str]
+
+    #step 2 output
+    intent: Optional[str]
+    #step 3 output
+    layout_type: Optional[str]
+
+    #step 4 output
+    object_type: Optional[str]
+    confidence: Optional[float]
+
+    # Input
     data: List[Dict[str, Any]]
     context: Optional[Dict[str, Any]]
     
-    # Step 1 output
-    analysis: Optional[QueryAnalysis]
+    # # Step 1 output
+    #analysis: Optional[QueryAnalysis]
     
-    # Step 2 output
+    # # Step 2 output
     candidates: Optional[List[Dict[str, Any]]]
     
-    # Step 3 output
+    # # Step 3 output
     layout: Optional[LayoutResponse]
     
     # Final output
@@ -112,9 +132,14 @@ class LangGraphUIAgent:
             self.vector_store = vector_store
         
         # Initialize components (same as before)
-        self.query_analyzer = QueryAnalyzer(client=self.client, model=model)
+        self.query_normalizer = QueryNormalizer(client=self.client, model=model)
+        self.object_analyzer = ObjectAnalyzer(client=self.client, model=model)
+        self.layout_analyzer = LayoutAnalyzer(client=self.client, model=model)
+        self.intent_analyzer = IntentAnalyzer(client=self.client, model=model)
+
         self.candidate_retriever = CandidateRetriever(vector_store=self.vector_store)
         self.layout_generator = LayoutGenerator(client=self.client, model=model)
+        
         
         # Build the LangGraph
         self.graph = self._build_graph()
@@ -125,6 +150,12 @@ class LangGraphUIAgent:
         """
         Build the LangGraph workflow
 
+        Flow:
+        START → normalize_query → analyze_intent → analyze_layout → analyze_object → [route]
+                                                                                        ↓
+                                                                    greeting → handle_greeting → END
+                                                                    crm_query → retrieve_candidates → generate_layout → END
+
         Returns:
             Compiled StateGraph
         """
@@ -132,17 +163,25 @@ class LangGraphUIAgent:
         workflow = StateGraph(AgentState)
 
         # Add nodes (each wraps one of our existing components)
-        workflow.add_node("analyze_query", self._analyze_query_node)
+        workflow.add_node("normalize_query", self._normalize_query_node)
+        workflow.add_node("analyze_intent", self._analyze_intent_node)
+        workflow.add_node("analyze_layout", self._analyze_layout_node)
+        workflow.add_node("analyze_object", self._analyze_object_node)
         workflow.add_node("handle_greeting", self._handle_greeting_node)
         workflow.add_node("retrieve_candidates", self._retrieve_candidates_node)
         workflow.add_node("generate_layout", self._generate_layout_node)
 
-        # Define the flow with conditional routing
-        workflow.set_entry_point("analyze_query")
+        # Define the flow
+        workflow.set_entry_point("normalize_query")
 
-        # After analysis, route based on intent
+        # Linear flow through analyzers
+        workflow.add_edge("normalize_query", "analyze_intent")
+        workflow.add_edge("analyze_intent", "analyze_layout")
+        workflow.add_edge("analyze_layout", "analyze_object")
+
+        # After object analysis, route based on intent
         workflow.add_conditional_edges(
-            "analyze_query",
+            "analyze_object",
             self._route_after_analysis,
             {
                 "greeting": "handle_greeting",
@@ -150,15 +189,96 @@ class LangGraphUIAgent:
             }
         )
 
-        # Greeting goes directly to END
+        # Greeting path: handle_greeting → END
         workflow.add_edge("handle_greeting", END)
 
-        # CRM queries follow the normal pipeline
+        # CRM query path: retrieve_candidates → generate_layout → END
         workflow.add_edge("retrieve_candidates", "generate_layout")
         workflow.add_edge("generate_layout", END)
 
         # Compile the graph
         return workflow.compile()
+
+    def _normalize_query_node(self, state: AgentState) -> AgentState:
+        """
+        Node 1: Normalize query
+
+        Wraps QueryNormalizer.normalize()
+
+        Args:
+            state: Current state
+
+        Returns:
+            Updated state with normalized query
+        """
+        logger.debug("Node 1: Normalizing query...")
+        normalization = self.query_normalizer.normalize(
+            query=state["query"]
+        )
+        state["normalized_query"] = normalization.normalized_query
+        state["is_crm_related"] = normalization.is_crm_related
+        state["reasoning"] = normalization.reasoning
+        return state
+    
+    def _analyze_intent_node(self, state: AgentState) -> AgentState:
+        """Node 2: Analyze intent
+
+        Wraps IntentAnalyzer.analyze()
+
+        Args:
+            state: Current state
+
+        Returns:
+            Updated state with intent
+        """        
+        logger.debug("Node 2: Analyzing intent...")
+        intent = self.intent_analyzer.analyze(
+            query=state["normalized_query"],
+            use_llm_fallback=True
+        )
+        state["intent"] = intent.get("intent")
+        return state
+    
+    def _analyze_layout_node(self, state: AgentState) -> AgentState:
+        """Node 3: Analyze layout type
+
+        Wraps LayoutAnalyzer.analyze()
+
+        Args:
+            state: Current state
+
+        Returns:
+            Updated state with layout type
+        """        
+        logger.debug("Node 3: Analyzing layout type...")
+        layout_type = self.layout_analyzer.analyze(
+            query=state["normalized_query"],
+            intent=state.get("intent"),
+            use_llm_fallback=True,
+            data=state["data"]
+        )
+        state["layout_type"] = layout_type.get("layout_type")
+        return state
+    
+    def _analyze_object_node(self, state: AgentState) -> AgentState:
+        """Node 4: Analyze object type
+        
+        Wraps ObjectAnalyzer.analyze()
+
+        Args:
+            state: Current state
+        
+        Returns:
+            Updated state with object type
+        """
+        logger.debug("Node 4: Analyzing object type...")
+        object_info = self.object_analyzer.analyze(
+            query=state["normalized_query"],
+            use_llm_fallback=True
+        )
+        state["object_type"] = object_info.get("object_type")
+        state["confidence"] = object_info.get("confidence")
+        return state
 
     def _route_after_analysis(self, state: AgentState) -> str:
         """
@@ -170,35 +290,12 @@ class LangGraphUIAgent:
         Returns:
             Next node name ("greeting" or "crm_query")
         """
-        analysis = state.get("analysis")
-        if analysis and analysis.intent == "greeting":
+        if state["intent"] == "greeting":
             logger.info("Routing to greeting handler")
             return "greeting"
         else:
             logger.info("Routing to CRM query pipeline")
             return "crm_query"
-
-    def _analyze_query_node(self, state: AgentState) -> AgentState:
-        """
-        Node 1: Analyze query
-
-        Wraps QueryAnalyzer.analyze()
-
-        Args:
-            state: Current state
-
-        Returns:
-            Updated state with analysis
-        """
-        logger.debug("Node 1: Analyzing query...")
-
-        analysis = self.query_analyzer.analyze(
-            query=state["query"],
-            context=state.get("context")
-        )
-
-        state["analysis"] = analysis
-        return state
 
     def _handle_greeting_node(self, state: AgentState) -> AgentState:
         """
@@ -268,7 +365,7 @@ Keep responses brief and friendly (2-3 sentences max)."""
 
     def _retrieve_candidates_node(self, state: AgentState) -> AgentState:
         """
-        Node 2: Retrieve candidate layouts
+        Node 5: Retrieve candidate layouts
 
         Wraps CandidateRetriever.retrieve()
 
@@ -278,12 +375,14 @@ Keep responses brief and friendly (2-3 sentences max)."""
         Returns:
             Updated state with candidates
         """
-        logger.debug("Node 2: Retrieving candidate layouts...")
+        logger.debug("Node 5: Retrieving candidate layouts...")
 
         candidates = self.candidate_retriever.retrieve(
-            query=state["query"],
-            analysis=state["analysis"],
-            k=5
+            query=state["normalized_query"],
+            k=5,
+            intent=state.get("intent"),
+            layout_type=state.get("layout_type"),
+            object_type=state.get("object_type")
         )
 
         state["candidates"] = candidates
@@ -291,7 +390,7 @@ Keep responses brief and friendly (2-3 sentences max)."""
 
     def _generate_layout_node(self, state: AgentState) -> AgentState:
         """
-        Node 3: Generate final layout
+        Node 6: Generate final layout
 
         Wraps LayoutGenerator.generate()
 
@@ -301,7 +400,7 @@ Keep responses brief and friendly (2-3 sentences max)."""
         Returns:
             Updated state with layout and result
         """
-        logger.debug("Node 3: Generating layout with provided data...")
+        logger.debug("Node 6: Generating layout with provided data...")
 
         # Select best candidate (RAG already ranked them, so use first one)
         candidates = state["candidates"]
@@ -311,9 +410,9 @@ Keep responses brief and friendly (2-3 sentences max)."""
         # Prepare context with query
         context = state.get("context", {})
         if isinstance(context, dict):
-            context["query"] = state.get("query", "")
+            context["query"] = state.get("normalized_query", "")
         else:
-            context = {"query": state.get("query", "")}
+            context = {"query": state.get("normalized_query", "")}
 
         # Generate layout by populating data into candidate structure
         layout = self.layout_generator.generate(
@@ -372,10 +471,16 @@ Keep responses brief and friendly (2-3 sentences max)."""
                 "query": query,
                 "data": data or [],
                 "context": context,
-                "analysis": None,
                 "candidates": None,
                 "layout": None,
-                "result": None
+                "result": None,
+                "normalized_query": None,
+                "is_crm_related": None,
+                "reasoning": None,
+                "intent": None,
+                "layout_type": None,
+                "object_type": None,
+                "confidence": None
             }
 
             # Run the graph
@@ -408,7 +513,7 @@ Keep responses brief and friendly (2-3 sentences max)."""
                 "candidate_retriever": "CandidateRetriever",
                 "layout_generator": "LayoutGenerator"
             },
-            "graph_nodes": ["analyze_query", "handle_greeting", "retrieve_candidates", "generate_layout"],
+            "graph_nodes": ["normalize_query", "analyze_intent", "analyze_layout", "analyze_object", "handle_greeting", "retrieve_candidates", "generate_layout"],
             "data_handling": "external",
             "vector_store": vector_stats,
             "status": "ready"
